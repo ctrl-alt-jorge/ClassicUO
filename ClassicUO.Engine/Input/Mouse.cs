@@ -1,5 +1,4 @@
 ﻿#region license
-
 //  Copyright (C) 2019 ClassicUO Development Community on Github
 //
 //	This project is an alternative client for the game Ultima Online.
@@ -18,18 +17,17 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
-
 using Microsoft.Xna.Framework;
 
 using SDL2;
 
 namespace ClassicUO.Input
 {
-    internal static class Mouse
+    public static class Mouse
     {
         public const int MOUSE_DELAY_DOUBLE_CLICK = 350;
+        private static Point _position;
 
         public static uint LastLeftButtonClickTime { get; set; }
 
@@ -47,17 +45,17 @@ namespace ClassicUO.Input
 
         public static bool IsDragging { get; set; }
 
-        public static Point Position;
+        public static Point Position => _position;
 
-        public static Point RealPosition;
+        public static Point LastClickPosition { get; set; }
 
-        public static Point LDropPosition;
+        public static Point RealPosition { get; private set; }
 
-        public static Point RDropPosition;
+        public static Point LDropPosition { get; set; }
 
-        public static Point MDropPosition;
+        public static Point RDropPosition { get; set; }
 
-        public static Point LastClickPosition;
+        public static Point MDropPosition { get; set; }
 
         public static Point LDroppedOffset => LButtonPressed ? RealPosition - LDropPosition : Point.Zero;
 
@@ -83,15 +81,15 @@ namespace ClassicUO.Input
             if (!MouseInWindow)
             {
                 SDL.SDL_GetGlobalMouseState(out int x, out int y);
-                SDL.SDL_GetWindowPosition(Engine.Instance.Window.Handle, out int winX, out int winY);
-                Position.X = x - winX;
-                Position.Y = y - winY;
+                SDL.SDL_GetWindowPosition(Microsoft.Xna.Framework.Input.Mouse.WindowHandle, out int winX, out int winY);
+                _position.X = x - winX;
+                _position.Y = y - winY;
             }
             else
-                SDL.SDL_GetMouseState(out Position.X, out Position.Y);
+                SDL.SDL_GetMouseState(out _position.X, out _position.Y);
 
             IsDragging = LButtonPressed || RButtonPressed || MButtonPressed;
-            RealPosition = Position;
+            RealPosition = _position;
         }
     }
 }

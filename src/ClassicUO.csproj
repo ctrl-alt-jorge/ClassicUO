@@ -204,7 +204,6 @@
     <Compile Include="Game\UI\Gumps\UseAbilityButtonGump.cs" />
     <Compile Include="Game\UI\MultiLineEntry.cs" />
     <Compile Include="Game\GameObjects\Views\MultiView.cs" />
-    <Compile Include="Input\Keyboard.cs" />
     <Compile Include="Interfaces\IPoolable.cs" />
     <Compile Include="IO\Audio\Sound.cs" />
     <Compile Include="IO\Audio\AudioEffects.cs" />
@@ -334,7 +333,6 @@
     <Compile Include="Game\UI\Tooltip.cs" />
     <Compile Include="Game\GameObjects\Views\LightningEffectView.cs" />
     <Compile Include="Game\GameObjects\Views\MovingEffectView.cs" />
-    <Compile Include="Input\Mouse.cs" />
     <Compile Include="Interfaces\INode.cs" />
     <Compile Include="Interfaces\ISmoothMovable.cs" />
     <Compile Include="IO\UltimaLive.cs" />
@@ -434,14 +432,7 @@
     <Compile Include="Game\GameObjects\Views\TileView.cs" />
     <Compile Include="Game\GameObjects\Views\View.cs" />
     <Compile Include="Game\World.cs" />
-    <Compile Include="Input\EventArgs.cs" />
-    <Compile Include="Input\InputEvent.cs" />
-    <Compile Include="Input\InputKeyboardEvent.cs" />
     <Compile Include="Input\InputManager.cs" />
-    <Compile Include="Input\InputMouseEvent.cs" />
-    <Compile Include="Input\KeyboardEvent.cs" />
-    <Compile Include="Input\MouseButtons.cs" />
-    <Compile Include="Input\MouseEvent.cs" />
     <Compile Include="Game\UI\TextEntry.cs" />
     <Compile Include="Interfaces\IColorable.cs" />
     <Compile Include="Interfaces\IDebuggable.cs" />
@@ -570,6 +561,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ClassicUO.Engine\ClassicUO.Engine.csproj">
+      <Project>{6f22ad61-35e1-4a56-873a-56996974668a}</Project>
+      <Name>ClassicUO.Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

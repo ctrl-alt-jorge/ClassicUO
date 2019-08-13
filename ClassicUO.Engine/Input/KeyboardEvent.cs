@@ -1,5 +1,4 @@
 ﻿#region license
-
 //  Copyright (C) 2019 ClassicUO Development Community on Github
 //
 //	This project is an alternative client for the game Ultima Online.
@@ -18,33 +17,17 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
 
-using static SDL2.SDL;
+using SDL2;
 
 namespace ClassicUO.Input
 {
-    internal class InputEvent
+    public enum KeyboardEvent
     {
-        public InputEvent(SDL_Keymod modifiers)
-        {
-            Mod = modifiers;
-        }
-
-        protected InputEvent(InputEvent parent)
-        {
-            Mod = parent.Mod;
-        }
-
-        public SDL_Keymod Mod { get; }
-
-        public bool IsHandled { get; set; }
-
-        public bool Alt => (Mod & SDL_Keymod.KMOD_ALT) != SDL_Keymod.KMOD_NONE;
-
-        public bool Control => (Mod & SDL_Keymod.KMOD_CTRL) != SDL_Keymod.KMOD_NONE;
-
-        public bool Shift => (Mod & SDL_Keymod.KMOD_SHIFT) != SDL_Keymod.KMOD_NONE;
+        Down,
+        Up,
+        Press,
+        TextInput
     }
 }

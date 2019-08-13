@@ -130,6 +130,7 @@ namespace ClassicUO.Input
                     if (Plugin.ProcessHotkeys((int) e.key.keysym.sym, (int) e.key.keysym.mod, true))
                     {
                         _ignoreNextTextInput = false;
+                        Keyboard.InputOnKeyDown(ref e.key);
                         Engine.SceneManager.CurrentScene.OnKeyDown(e.key);
 
                         KeyDown?.Raise(e.key);
@@ -141,6 +142,7 @@ namespace ClassicUO.Input
 
                 case SDL_EventType.SDL_KEYUP:
 
+                    Keyboard.InputOnKeyUp(ref e.key);
                     Engine.SceneManager.CurrentScene.OnKeyUp(e.key);
                     KeyUp.Raise(e.key);
 
