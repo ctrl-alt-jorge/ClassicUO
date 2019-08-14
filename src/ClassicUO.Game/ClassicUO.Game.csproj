@@ -506,7 +506,7 @@
     <EmbeddedResource Include="cuologo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ClassicUO.Engine\ClassicUO.Engine.csproj">
+    <ProjectReference Include="..\ClassicUO.Engine\ClassicUO.Engine.csproj">
       <Project>{6f22ad61-35e1-4a56-873a-56996974668a}</Project>
       <Name>ClassicUO.Engine</Name>
     </ProjectReference>
