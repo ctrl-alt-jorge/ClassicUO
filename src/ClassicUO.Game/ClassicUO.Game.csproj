@@ -84,14 +84,15 @@
     <ApplicationIcon>cuoicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cuoapi, Version=1.3.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\api\cuoapi.dll</HintPath>
+    <Reference Include="cuoapi">
+      <HintPath>..\ClassicUO.Engine\libs\api\cuoapi.dll</HintPath>
     </Reference>
-    <Reference Include="FNA, Version=19.8.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="FNA">
+      <HintPath>..\ClassicUO.Engine\libs\FNA\FNA.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -506,7 +507,7 @@
     <EmbeddedResource Include="cuologo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ClassicUO.Engine\ClassicUO.Engine.csproj">
+    <ProjectReference Include="..\ClassicUO.Engine\ClassicUO.Engine.csproj">
       <Project>{6f22ad61-35e1-4a56-873a-56996974668a}</Project>
       <Name>ClassicUO.Engine</Name>
     </ProjectReference>
