@@ -43,16 +43,18 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Input\EventArgs.cs" />
     <Compile Include="Input\InputEvent.cs" />
     <Compile Include="Input\InputKeyboardEvent.cs" />
     <Compile Include="Input\InputMouseEvent.cs" />
     <Compile Include="Input\Keyboard.cs" />
     <Compile Include="Input\KeyboardEvent.cs" />
+    <Compile Include="Input\KeyboardEventArgs.cs" />
     <Compile Include="Input\Mouse.cs" />
     <Compile Include="Input\MouseButtons.cs" />
     <Compile Include="Input\MouseEvent.cs" />
+    <Compile Include="Input\Mouse\MouseDoubleClickEventArgs.cs" />
     <Compile Include="Input\Mouse\MouseEventArgs.cs" />
+    <Compile Include="Input\Mouse\MouseWheelEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SDL\SDL2.cs" />
   </ItemGroup>
