@@ -51,6 +51,7 @@
     <Compile Include="Input\MouseButtons.cs" />
     <Compile Include="Input\MouseEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SDL\SDL2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="libs\api\cuoapi.dll">
@@ -112,5 +113,6 @@
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
