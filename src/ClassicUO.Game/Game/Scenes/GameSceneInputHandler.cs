@@ -480,7 +480,7 @@ namespace ClassicUO.Game.Scenes
                         {
                             _inqueue = true;
                             _queuedObject = ent;
-                            _dequeueAt = Mouse.MOUSE_DELAY_DOUBLE_CLICK;
+                            _dequeueAt = Mouse.MOUSEDELAYDOUBLECLICK;
                             _wasShiftDown = _isShiftDown;
 
                             _queuedAction = () =>

@@ -276,7 +276,7 @@ namespace ClassicUO.Game.UI.Gumps
                         return;
                     }
 
-                    _clickTiming += Mouse.MOUSE_DELAY_DOUBLE_CLICK;
+                    _clickTiming += Mouse.MOUSEDELAYDOUBLECLICK;
 
                     if (_clickTiming > 0)
                         _isPressed = true;

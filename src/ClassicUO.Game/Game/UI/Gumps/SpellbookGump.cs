@@ -815,7 +815,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if (sender is HoveredLabel l && e.Button == MouseButton.Left)
             {
-                _clickTiming += Mouse.MOUSE_DELAY_DOUBLE_CLICK;
+                _clickTiming += Mouse.MOUSEDELAYDOUBLECLICK;
 
                 if (_clickTiming > 0)
                     _lastPressed = l;
@@ -826,7 +826,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if (_lastPressed != null && e.Button == MouseButton.Left)
             {
-                _clickTiming = -Mouse.MOUSE_DELAY_DOUBLE_CLICK;
+                _clickTiming = -Mouse.MOUSEDELAYDOUBLECLICK;
                 var def = GetSpellDefinition((int) _lastPressed.Tag);
 
                 if (def != null) GameActions.CastSpell(def.ID);

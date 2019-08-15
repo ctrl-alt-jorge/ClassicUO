@@ -219,7 +219,7 @@ namespace ClassicUO.Input
                                 Mouse.CancelDoubleClick = false;
                                 uint ticks = SDL_GetTicks();
 
-                                if (Mouse.LastLeftButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
+                                if (Mouse.LastLeftButtonClickTime + Mouse.MOUSEDELAYDOUBLECLICK >= ticks)
                                 {
                                     Mouse.LastLeftButtonClickTime = 0;
 
@@ -269,7 +269,7 @@ namespace ClassicUO.Input
                                 Mouse.CancelDoubleClick = false;
                                 uint ticks = SDL_GetTicks();
 
-                                if (Mouse.LastMidButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
+                                if (Mouse.LastMidButtonClickTime + Mouse.MOUSEDELAYDOUBLECLICK >= ticks)
                                 {
                                     Mouse.LastMidButtonClickTime = 0;
                                     var res = Engine.SceneManager.CurrentScene.OnMiddleMouseDoubleClick();
@@ -313,7 +313,7 @@ namespace ClassicUO.Input
                                 Mouse.CancelDoubleClick = false;
                                 uint ticks = SDL_GetTicks();
 
-                                if (Mouse.LastRightButtonClickTime + Mouse.MOUSE_DELAY_DOUBLE_CLICK >= ticks)
+                                if (Mouse.LastRightButtonClickTime + Mouse.MOUSEDELAYDOUBLECLICK >= ticks)
                                 {
                                     Mouse.LastRightButtonClickTime = 0;
 

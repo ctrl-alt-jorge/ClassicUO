@@ -247,7 +247,7 @@ namespace ClassicUO.Game.UI.Controls
                             _clickedCanDrag = false;
                             _sendClickIfNotDClick = true;
                             float totalMS = Engine.Ticks;
-                            _sClickTime = totalMS + Mouse.MOUSE_DELAY_DOUBLE_CLICK;
+                            _sClickTime = totalMS + Mouse.MOUSEDELAYDOUBLECLICK;
                             _lastClickPosition.X = Mouse.Position.X;
                             _lastClickPosition.Y = Mouse.Position.Y;
                         }
