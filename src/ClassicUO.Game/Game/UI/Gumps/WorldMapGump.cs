@@ -22,8 +22,11 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 
+using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Map;
+using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
@@ -37,21 +40,96 @@ using MathHelper = Microsoft.Xna.Framework.MathHelper;
 
 namespace ClassicUO.Game.UI.Gumps
 {
-    internal class WorldMapGump : Gump
+    internal class WorldMapGump : ResizableGump
     {
         private UOTexture _mapTexture;
+        private bool _isTopMost;
+        private readonly float[] _zooms = new float[10] { 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.5f, 2f, 4f, 6f, 8f };
+        private int _zoomIndex = 4;
 
-        public WorldMapGump() : base(0, 0)
+        private Point _center, _lastScroll;
+        private bool _isScrolling;
+
+        public WorldMapGump() : base(400, 400, 100, 100, 0, 0)
         {
             CanMove = true;
             AcceptMouseInput = true;
-            Width = 400;
-            Height = 400;
-
-            //using (FileStream stream = File.OpenRead(@"D:\Progetti\UO\map\Maps\2Dmap0.png"))
-            //    _mapTexture = Texture2D.FromStream(Service.GetByLocalSerial<SpriteBatch3D>().GraphicsDevice, stream);
+            //CanCloseWithRightClick = false;
 
             Load();
+            OnResize();
+        }
+
+
+        public float Zoom => _zooms[_zoomIndex];
+
+
+        protected override bool OnMouseDoubleClick(int x, int y, MouseButton button)
+        {
+            if (button != MouseButton.Left || _isScrolling || Keyboard.Alt)
+                return base.OnMouseDoubleClick(x, y, button);
+
+            _isTopMost = !_isTopMost;
+
+            ShowBorder = !_isTopMost;
+
+            ControlInfo.Layer = _isTopMost ? UILayer.Over : UILayer.Default;
+
+            return true;
+        }
+
+        protected override void OnMouseUp(int x, int y, MouseButton button)
+        {
+            _isScrolling = false;
+            CanMove = true;
+            base.OnMouseUp(x, y, button);
+        }
+
+        protected override void OnMouseDown(int x, int y, MouseButton button)
+        {
+            if (button == MouseButton.Left && Keyboard.Alt)
+            {
+                _isScrolling = true;
+                CanMove = false;
+            }
+
+            base.OnMouseDown(x, y, button);
+        }
+
+        protected override void OnMouseOver(int x, int y)
+        {
+            Point offset = Mouse.LDroppedOffset;
+
+            if (_isScrolling && offset != Point.Zero)
+            {
+                int scrollX = _lastScroll.X - x;
+                int scrollY = _lastScroll.Y - y;
+
+                (scrollX, scrollY) = RotatePoint(scrollX, scrollY, 1f, -1);
+
+                _center.X += (int) (scrollX / Zoom);
+                _center.Y += (int) (scrollY / Zoom);
+
+                if (_center.X < 0)
+                    _center.X = 0;
+
+                if (_center.Y < 0)
+                    _center.Y = 0;
+
+                _lastScroll.X = x;
+                _lastScroll.Y = y;
+            }
+            else
+            {
+                base.OnMouseOver(x, y);
+            }
+        }
+
+        public override void Update(double totalMS, double frameMS)
+        {
+            base.Update(totalMS, frameMS);
+
+          
         }
 
         private unsafe void Load()
@@ -283,73 +361,122 @@ namespace ClassicUO.Game.UI.Gumps
             }
         }
         
-        public static Vector2 RotateVector2(Vector2 point, float radians, Vector2 pivot)
+     
+        public static (int, int) RotatePoint(int x, int y, float zoom, int dist, float angle = 45f)
         {
-            float cosRadians = (float) Math.Cos(radians);
-            float sinRadians = (float) Math.Sin(radians);
+            x = (int)(x * zoom);
+            y = (int)(y * zoom);
 
-            Vector2 translatedPoint = new Vector2
-            {
-                X = point.X - pivot.X, Y = point.Y - pivot.Y
-            };
+            if (angle == 0.0f)
+                return (x, y);
 
-            Vector2 rotatedPoint = new Vector2
-            {
-                X = translatedPoint.X * cosRadians - translatedPoint.Y * sinRadians + pivot.X, Y = translatedPoint.X * sinRadians + translatedPoint.Y * cosRadians + pivot.Y
-            };
-
-            return rotatedPoint;
+            return ((int)Math.Round(Math.Cos(dist * Math.PI / 4.0) * x - Math.Sin(dist * Math.PI / 4.0) * y), (int)Math.Round(Math.Sin(dist * Math.PI / 4.0) * x + Math.Cos(dist * Math.PI / 4.0) * y));
         }
 
-        private int _scale = 1;
 
         protected override void OnMouseWheel(MouseEvent delta)
         {
             if (delta == MouseEvent.WheelScrollUp)
             {
-                _scale++;
+                _zoomIndex++;
+
+                if (_zoomIndex >= _zooms.Length)
+                    _zoomIndex = _zooms.Length - 1;
             }
             else
-                _scale--;
+            {
+                _zoomIndex--;
 
-            if (_scale <= 0)
-                _scale = 1;
+                if (_zoomIndex < 0)
+                    _zoomIndex = 0;
+            }
+
 
             base.OnMouseWheel(delta);
         }
 
         public override bool Draw(UltimaBatcher2D batcher, int x, int y)
         {
-            int sx = World.Player.X;
-            int sy = World.Player.Y;
-            int sw = Width >> 1;
-            int sh = Height >> 1;
+            if (!_isScrolling)
+            {
+                _center.X = World.Player.X;
+                _center.Y = World.Player.Y;
+            }
+
+
+            int gX = x + 4;
+            int gY = y + 4;
+            int gWidth = Width - 8;
+            int gHeight = Height - 8;
+
+            int sx = _center.X;
+            int sy = _center.Y;
+
+            int size = (int) Math.Max(gWidth * 1.75f, gHeight * 1.75f);
+           
+
+            int sw = (int) (size / Zoom);
+            int sh = (int) (size / Zoom);
+
+            int halfWidth = gWidth >> 1;
+            int halfHeight = gHeight >> 1;
 
             ResetHueVector();
 
-            //var v = RotateVector2(new Vector2(x + (sx - (sw >> 0)), y + (sy - (sh >> 0))),
-            //                      45,
-            //                      new Vector2(x + (sx - (sw >> 0)), y + (sy - (sh >> 0))));
 
-            //batcher.Draw2DRotated(_mapTexture,
-            //                      x + (sx - (sw >> 1)),
-            //                      y + (sy - (sh >> 1)),
-            //                      x + sw,
-            //                      y + sh,
-            //                      x + sw,
-            //                      y + sh);
+            if (_mapTexture == null)
+                return false;
 
-            batcher.Draw2D(_mapTexture, x, y,
-                           Width, Height,
+            var rect = ScissorStack.CalculateScissors(Matrix.Identity, gX, gY, gWidth, gHeight);
 
-                           sx - (sw),
-                           sy - (sh), 
-                           Width / _scale, 
-                           Height / _scale,
+            if (ScissorStack.PushScissors(rect))
+            {
+                batcher.EnableScissorTest(true);
 
-                           ref _hueVector);
+                int offset = size >> 1;
+
+
+                batcher.Draw2D(_mapTexture, (x - offset) + halfWidth, (y - offset) + halfHeight,
+                               size, size,
+
+                               sx - (sw >> 1),
+                               sy - (sh >> 1),
+
+                               sw,
+                               sh,
+
+                               ref _hueVector, 45);
+
+                batcher.EnableScissorTest(false);
+
+                ScissorStack.PopScissors();
+            }
+
+
+
+            foreach (Mobile mobile in World.Mobiles)
+            {
+                if (mobile != World.Player)
+                    DrawMobile(batcher, mobile, gX, gY, halfWidth, halfHeight, Zoom, Color.Red);
+            }
+
+            DrawMobile(batcher, World.Player, gX, gY, halfWidth, halfHeight, Zoom, Color.White);
+
 
             return base.Draw(batcher, x, y);
+        }
+
+        private void DrawMobile(UltimaBatcher2D batcher, Mobile mobile, int x, int y, int width, int height, float zoom, Color color)
+        {
+            int sx = mobile.X - _center.X;
+            int sy = mobile.Y - _center.Y;
+
+            (int rotX, int rotY) = RotatePoint(sx, sy, zoom, 1);
+
+            rotX += x + width;
+            rotY += y + height;
+
+            batcher.Draw2D(Textures.GetTexture(color), rotX, rotY, 5, 5, ref _hueVector);
         }
 
         public override void Dispose()
