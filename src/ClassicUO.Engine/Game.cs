@@ -23,6 +23,7 @@ namespace ClassicUO.NewEngine
     using System.Reflection;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using SDL2;
 
     public class Game : Microsoft.Xna.Framework.Game
     {
@@ -54,6 +55,36 @@ namespace ClassicUO.NewEngine
         {
             get => instance.Window.AllowUserResizing;
             set => instance.Window.AllowUserResizing = value;
+        }
+
+        public static bool IsMaximized
+        {
+            get
+            {
+                IntPtr wnd = SDL.SDL_GL_GetCurrentWindow();
+                uint flags = SDL.SDL_GetWindowFlags(wnd);
+
+                return (flags & (uint)SDL.SDL_WindowFlags.SDL_WINDOW_MAXIMIZED) != 0;
+            }
+
+            set
+            {
+                if (IsMaximized == value)
+                {
+                    return;
+                }
+
+                IntPtr wnd = SDL.SDL_GL_GetCurrentWindow();
+
+                if (value)
+                {
+                    SDL.SDL_MaximizeWindow(wnd);
+                }
+                else
+                {
+                    SDL.SDL_RestoreWindow(wnd);
+                }
+            }
         }
 
         public static int WindowWidth
