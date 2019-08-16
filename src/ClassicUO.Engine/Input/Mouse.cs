@@ -71,7 +71,9 @@ namespace ClassicUO.Input
         public static void End()
         {
             if (!(LButtonPressed || RButtonPressed || MButtonPressed))
+            {
                 SDL.SDL_CaptureMouse(SDL.SDL_bool.SDL_FALSE);
+            }
         }
 
         public static void Update()
@@ -84,7 +86,9 @@ namespace ClassicUO.Input
                 position.Y = y - winY;
             }
             else
+            {
                 SDL.SDL_GetMouseState(out position.X, out position.Y);
+            }
 
             IsDragging = LButtonPressed || RButtonPressed || MButtonPressed;
             RealPosition = position;
