@@ -72,7 +72,6 @@ namespace ClassicUO
     {
         private const int INACTIVE_FPS_DELAY = 217; // 5 fps
 
-        private static GameWindow _window;
         private static int _fpsLimit = 30;
         private static Engine _engine;
 
@@ -135,8 +134,6 @@ namespace ClassicUO
 
             TargetElapsedTime = TimeSpan.FromSeconds(1.0f / Constants.MAX_FPS);
             IsFixedTimeStep = _settings.FixedTimeStep;
-
-            _window = Window;
 
             Window.ClientSizeChanged += (sender, e) =>
             {
