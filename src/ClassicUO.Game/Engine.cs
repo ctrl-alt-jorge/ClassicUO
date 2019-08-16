@@ -77,7 +77,6 @@ namespace ClassicUO
         private static Engine _engine;
 
         public static bool DebugFocus = false;
-        private readonly bool _isHighDPI;
         private readonly Settings _settings;
         private AuraManager _auraManager;
         private UltimaBatcher2D _batcher;
@@ -137,7 +136,6 @@ namespace ClassicUO
             TargetElapsedTime = TimeSpan.FromSeconds(1.0f / Constants.MAX_FPS);
             IsFixedTimeStep = _settings.FixedTimeStep;
 
-            _isHighDPI = Environment.GetEnvironmentVariable("FNA_GRAPHICS_ENABLE_HIGHDPI") == "1";
             _window = Window;
 
             Window.ClientSizeChanged += (sender, e) =>
@@ -145,7 +143,7 @@ namespace ClassicUO
                 int width = Window.ClientBounds.Width;
                 int height = Window.ClientBounds.Height;
 
-                if (_isHighDPI)
+                if (isHighDPI)
                 {
                     width *= 2;
                     height *= 2;
@@ -203,8 +201,6 @@ namespace ClassicUO
                 }
             }
         }
-
-        public static Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
 
         public static int CurrentFPS { get; private set; }
         public static int FPSMin { get; private set; } = int.MaxValue;

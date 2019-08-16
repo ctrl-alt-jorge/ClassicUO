@@ -19,13 +19,16 @@
 
 namespace ClassicUO.NewEngine
 {
+    using System;
+    using System.Reflection;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
     public class Game : Microsoft.Xna.Framework.Game
     {
-        private static Game instance = null;
+        protected readonly bool isHighDPI = Environment.GetEnvironmentVariable("FNA_GRAPHICS_ENABLE_HIGHDPI") == "1";
 
+        private static Game instance = null;
         private readonly GraphicsDeviceManager graphicsDeviceManager;
 
         public Game(string[] args)
@@ -43,7 +46,9 @@ namespace ClassicUO.NewEngine
             graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             graphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
             graphicsDeviceManager.ApplyChanges();
-        }
+         }
+
+        public static Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
 
         public static int WindowWidth
         {
@@ -71,6 +76,7 @@ namespace ClassicUO.NewEngine
             instance.graphicsDeviceManager.PreferredBackBufferHeight = height;
             instance.graphicsDeviceManager.ApplyChanges();
         }
+
 
         internal static Game Instance { get { return Game.instance; } }
     }
