@@ -205,11 +205,11 @@ namespace ClassicUO
         public static int CurrentFPS { get; private set; }
         public static int FPSMin { get; private set; } = int.MaxValue;
         public static int FPSMax { get; private set; }
-        public static bool AllowWindowResizing
-        {
-            get => _window.AllowUserResizing;
-            set => _window.AllowUserResizing = value;
-        }
+        //public static bool AllowWindowResizing
+        //{
+        //    get => _window.AllowUserResizing;
+        //    set => _window.AllowUserResizing = value;
+        //}
         public static uint Ticks { get; private set; }
 
         public static uint[] FrameDelay { get; } = new uint[2];

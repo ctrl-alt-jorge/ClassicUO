@@ -50,6 +50,12 @@ namespace ClassicUO.NewEngine
 
         public static Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
 
+        public static bool AllowWindowResizing
+        {
+            get => instance.Window.AllowUserResizing;
+            set => instance.Window.AllowUserResizing = value;
+        }
+
         public static int WindowWidth
         {
             get => instance.graphicsDeviceManager.PreferredBackBufferWidth;
@@ -77,7 +83,9 @@ namespace ClassicUO.NewEngine
             instance.graphicsDeviceManager.ApplyChanges();
         }
 
-
-        internal static Game Instance { get { return Game.instance; } }
+        internal static Game Instance
+        {
+            get { return Game.instance; }
+        }
     }
 }
