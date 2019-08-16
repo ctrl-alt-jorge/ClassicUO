@@ -68,7 +68,7 @@ namespace ClassicUO
         }
     }
 
-    internal class Engine : Microsoft.Xna.Framework.Game
+    internal class Engine : NewEngine.Game
     {
         private const int INACTIVE_FPS_DELAY = 217; // 5 fps
 
@@ -77,7 +77,6 @@ namespace ClassicUO
         private static Engine _engine;
 
         public static bool DebugFocus = false;
-        private readonly GraphicsDeviceManager _graphicDeviceManager;
         private readonly bool _isHighDPI;
         private readonly Settings _settings;
         private AuraManager _auraManager;
@@ -94,7 +93,7 @@ namespace ClassicUO
         private int _totalFrames;
         private UIManager _uiManager;
 
-        private Engine(string[] args)
+        private Engine(string[] args) : base(args)
         {
             Instance = this;
 
@@ -135,19 +134,8 @@ namespace ClassicUO
                 return;
             }
 
-
             TargetElapsedTime = TimeSpan.FromSeconds(1.0f / Constants.MAX_FPS);
             IsFixedTimeStep = _settings.FixedTimeStep;
-
-            _graphicDeviceManager = new GraphicsDeviceManager(this);
-            _graphicDeviceManager.PreparingDeviceSettings += (sender, e) => e.GraphicsDeviceInformation.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
-
-            if (_graphicDeviceManager.GraphicsDevice.Adapter.IsProfileSupported(GraphicsProfile.HiDef))
-                _graphicDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
-
-            _graphicDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
-            _graphicDeviceManager.SynchronizeWithVerticalRetrace = false;
-            _graphicDeviceManager.ApplyChanges();
 
             _isHighDPI = Environment.GetEnvironmentVariable("FNA_GRAPHICS_ENABLE_HIGHDPI") == "1";
             _window = Window;
@@ -257,26 +245,6 @@ namespace ClassicUO
 
         public static int ThreadID { get; private set; }
 
-        public static int WindowWidth
-        {
-            get => _engine._graphicDeviceManager.PreferredBackBufferWidth;
-            set
-            {
-                _engine._graphicDeviceManager.PreferredBackBufferWidth = value;
-                _engine._graphicDeviceManager.ApplyChanges();
-            }
-        }
-
-        public static int WindowHeight
-        {
-            get => _engine._graphicDeviceManager.PreferredBackBufferHeight;
-            set
-            {
-                _engine._graphicDeviceManager.PreferredBackBufferHeight = value;
-                _engine._graphicDeviceManager.ApplyChanges();
-            }
-        }
-
         public static UIManager UI => _engine._uiManager;
 
         public static InputManager Input => _engine._inputManager;
@@ -296,13 +264,6 @@ namespace ClassicUO
         public double[] IntervalFixedUpdate { get; } = new double[2];
 
         public double FPSTime => IntervalFixedUpdate[!IsActive && _profileManager?.Current != null && _profileManager.Current.ReduceFPSWhenInactive ? 1 : 0];
-
-        public static void SetPreferredBackBufferSize(int width, int height)
-        {
-            _engine._graphicDeviceManager.PreferredBackBufferWidth = width;
-            _engine._graphicDeviceManager.PreferredBackBufferHeight = height;
-            _engine._graphicDeviceManager.ApplyChanges();
-        }
 
         public static void DropFpsMinMaxValues()
         {

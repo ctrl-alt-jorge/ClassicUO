@@ -43,6 +43,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game.cs" />
     <Compile Include="Input\InputEvent.cs" />
     <Compile Include="Input\InputKeyboardEvent.cs" />
     <Compile Include="Input\InputMouseEvent.cs" />
