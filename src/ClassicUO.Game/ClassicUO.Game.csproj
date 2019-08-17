@@ -275,7 +275,6 @@
     <Compile Include="IO\Resources\TexmapsLoader.cs" />
     <Compile Include="IO\Resources\TileDataLoader.cs" />
     <Compile Include="IO\UOFileUopNoFormat.cs" />
-    <Compile Include="Network\BufferPool.cs" />
     <Compile Include="Network\Plugin.cs" />
     <Compile Include="Network\Updater.cs" />
     <Compile Include="Renderer\SpriteRenderer.cs" />

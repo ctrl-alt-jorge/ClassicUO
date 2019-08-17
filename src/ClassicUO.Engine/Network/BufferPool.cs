@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace ClassicUO.Network
 {
-    internal class BufferPool
+    public class BufferPool
     {
         private readonly int _arraySize;
         private readonly int _capacity;

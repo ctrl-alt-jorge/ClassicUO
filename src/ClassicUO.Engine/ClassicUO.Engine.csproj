@@ -56,6 +56,7 @@
     <Compile Include="Input\Mouse\MouseDoubleClickEventArgs.cs" />
     <Compile Include="Input\Mouse\MouseEventArgs.cs" />
     <Compile Include="Input\Mouse\MouseWheelEventArgs.cs" />
+    <Compile Include="Network\BufferPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SDL\SDL2.cs" />
   </ItemGroup>
