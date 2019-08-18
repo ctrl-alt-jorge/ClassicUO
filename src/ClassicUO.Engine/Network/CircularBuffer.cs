@@ -63,11 +63,11 @@ namespace ClassicUO.Network
         }
 
         /// <summary>
-        ///     Enqueues a buffer to the queue and inserts it to a correct position
+        ///     Enqueues a buffer to the queue and inserts it to a correct position.
         /// </summary>
-        /// <param name="buffer">Buffer to enqueue</param>
-        /// <param name="offset">The zero-based byte offset in the buffer</param>
-        /// <param name="size">The number of bytes to enqueue</param>
+        /// <param name="buffer">Buffer to enqueue.</param>
+        /// <param name="offset">The zero-based byte offset in the buffer.</param>
+        /// <param name="size">The number of bytes to enqueue.</param>
         public void Enqueue(byte[] buffer, int offset, int size)
         {
             if (Length + size > this.buffer.Length)
@@ -99,12 +99,12 @@ namespace ClassicUO.Network
         }
 
         /// <summary>
-        ///     Dequeues a buffer from the queue
+        ///     Dequeues a buffer from the queue.
         /// </summary>
-        /// <param name="buffer">Buffer to enqueue</param>
-        /// <param name="offset">The zero-based byte offset in the buffer</param>
-        /// <param name="size">The number of bytes to dequeue</param>
-        /// <returns>Number of bytes dequeued</returns>
+        /// <param name="buffer">Buffer to enqueue.</param>
+        /// <param name="offset">The zero-based byte offset in the buffer.</param>
+        /// <param name="size">The number of bytes to dequeue.</param>
+        /// <returns>Number of bytes dequeued.</returns>
         public int Dequeue(byte[] buffer, int offset, int size)
         {
             if (size > Length)
