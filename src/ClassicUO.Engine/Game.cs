@@ -21,6 +21,7 @@ namespace ClassicUO.NewEngine
 {
     using System;
     using System.Reflection;
+    using ClassicUO.EngineNew.Graphics.OpenGL;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using SDL2;
@@ -31,9 +32,19 @@ namespace ClassicUO.NewEngine
 
         private static Game instance = null;
         private readonly GraphicsDeviceManager graphicsDeviceManager;
+        private readonly Development.GameWindow gameWindow;
 
         public Game(string[] args)
         {
+#if FALSE    //  Set to false for original behaviour.
+            gameWindow = new Development.GameWindow();
+
+            if (gameWindow.Valid)
+            {
+               TickNew();
+               return;
+            }
+#endif
             instance = this;
 
             graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -107,6 +118,11 @@ namespace ClassicUO.NewEngine
             }
         }
 
+        internal static Game Instance
+        {
+            get { return Game.instance; }
+        }
+
         public static void SetPreferredBackBufferSize(int width, int height)
         {
             instance.graphicsDeviceManager.PreferredBackBufferWidth = width;
@@ -114,9 +130,23 @@ namespace ClassicUO.NewEngine
             instance.graphicsDeviceManager.ApplyChanges();
         }
 
-        internal static Game Instance
+        public void TickNew()
         {
-            get { return Game.instance; }
+            while (true)
+            {
+                SDL.SDL_PollEvent(out SDL.SDL_Event sdlEvent);
+
+                if (sdlEvent.type == SDL.SDL_EventType.SDL_KEYDOWN)
+                {
+                    SDL.SDL_Quit();
+                    break;
+                }
+
+                GL.Clear(GL.GL_COLOR_BUFFER_BIT);
+                GL.ClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+
+                SDL.SDL_GL_SwapWindow(gameWindow.Handle);
+            }
         }
     }
 }

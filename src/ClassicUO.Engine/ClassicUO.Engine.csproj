@@ -41,9 +41,13 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameWindow.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Graphics\GL.cs" />
     <Compile Include="Input\InputEvent.cs" />
     <Compile Include="Input\InputKeyboardEvent.cs" />
     <Compile Include="Input\InputMouseEvent.cs" />
