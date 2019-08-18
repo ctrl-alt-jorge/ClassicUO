@@ -13,12 +13,27 @@ using ClassicUO.Network;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 
+using Xwt;
+
 namespace ClassicUO
 {
     static class Bootstrap
     {
+        [STAThread]
         static void Main(string[] args)
         {
+            Application.Initialize();
+
+            var mainWindow = new Window()
+            {
+                Title = "Xwt Demo Application",
+                Width = 500,
+                Height = 400
+            };
+            mainWindow.Show();
+            Application.Run();
+            mainWindow.Dispose();
+
             Engine.Configure();
 
 #if DEV_BUILD
