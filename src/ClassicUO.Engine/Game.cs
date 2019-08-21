@@ -22,6 +22,7 @@ namespace ClassicUO.NewEngine
     using System;
     using System.Reflection;
     using ClassicUO.EngineNew.Graphics.OpenGL;
+    using ClassicUO.Graphics;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using SDL2;
@@ -33,6 +34,7 @@ namespace ClassicUO.NewEngine
         private static Game instance = null;
         private readonly GraphicsDeviceManager graphicsDeviceManager;
         private readonly Development.GameWindow gameWindow;
+        private readonly EngineNew.Graphics.GraphicsDevice graphicsDevice;
 
         public Game(string[] args)
         {
@@ -41,8 +43,10 @@ namespace ClassicUO.NewEngine
 
             if (gameWindow.Valid)
             {
-               TickNew();
-               return;
+                GL.LoadEntryPoints();
+                var shaderProgram = new ShaderProgram();
+                TickNew();
+                return;
             }
 #endif
             instance = this;
@@ -142,8 +146,10 @@ namespace ClassicUO.NewEngine
                     break;
                 }
 
-                GL.Clear(GL.GL_COLOR_BUFFER_BIT);
-                GL.ClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+                //GL.Clear(GL.GL_COLOR_BUFFER_BIT);
+                //GL.ClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+
+                graphicsDevice.DrawPrimitives();
 
                 SDL.SDL_GL_SwapWindow(gameWindow.Handle);
             }

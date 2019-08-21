@@ -89,7 +89,7 @@ namespace ClassicUO.IO.Resources
         {
             return Task.Run(() =>
             {
-                UOFileMul fonts = new UOFileMul(Path.Combine(FileManager.UoFolderPath, "fonts.mul"), false);
+                UOFileMul fonts = new UOFileMul(Path.Combine(FileManager.UoFolderPath, "fonts.mul"));
                 UOFileMul[] uniFonts = new UOFileMul[20];
 
                 for (int i = 0; i < 20; i++)
@@ -98,7 +98,7 @@ namespace ClassicUO.IO.Resources
 
                     if (File.Exists(path))
                     {
-                        uniFonts[i] = new UOFileMul(path, false);
+                        uniFonts[i] = new UOFileMul(path);
                         _unicodeFontAddress[i] = uniFonts[i].StartAddress;
                         _unicodeFontSize[i] = uniFonts[i].Length;
                     }
@@ -187,7 +187,7 @@ namespace ClassicUO.IO.Resources
             });
         }
 
-        protected override void CleanResources()
+        public override void CleanResources()
         {
             // do nothing
         }
@@ -342,22 +342,27 @@ namespace ClassicUO.IO.Resources
 
             StringBuilder sb = new StringBuilder();
 
-            //if (IsUsingHTML)
-            //{
-            //    int strLen = str.Length;
-            //    GetHTMLData(font, str, ref strLen, align, flags);
-            //    sb.Append(str.Substring(0, str.Length - strLen));
-            //    str = str.Substring(str.Length - strLen, strLen);
+            if (IsUsingHTML)
+            {
+                int strLen = str.Length;
 
+                var htmlData = GetHTMLData(font, str, ref strLen, align, flags);
+                int size = str.Length - strLen;
+                if (size > 0)
+                {
+                    sb.Append(str.Substring(0, size));
+                    str = str.Substring(str.Length - strLen, strLen);
 
-            //    int newWidth = GetWidthExASCII(font, str, width, align, flags);
+                    int newWidth = GetWidthExUnicode(font, str, width, align, flags);
 
-            //    if (newWidth <= width)
-            //    {
-            //        sb.Append(str);
-            //        return sb.ToString();
-            //    }
-            //}
+                    if (newWidth <= width)
+                    {
+                        sb.Append(str);
+
+                        return sb.ToString();
+                    }
+                }
+            }
 
             if (isCropped)
                 width -= fd.Chars[_fontIndex[(byte) '.']].Width * 3;
@@ -773,22 +778,27 @@ namespace ClassicUO.IO.Resources
 
             StringBuilder sb = new StringBuilder();
 
-            //if (IsUsingHTML)
-            //{
-            //    int strLen = str.Length;
+            if (IsUsingHTML)
+            {
+                int strLen = str.Length;
 
-            //    GetHTMLData(font, str, ref strLen, align, flags);
-            //    sb.Append(str.Substring(0, str.Length - strLen));
-            //    str = str.Substring(str.Length - strLen, strLen);
+                var htmlData = GetHTMLData(font, str, ref strLen, align, flags);
+                int size = str.Length - strLen;
+                if (size > 0)
+                {
+                    sb.Append(str.Substring(0, size));
+                    str = str.Substring(str.Length - strLen, strLen);
 
-            //    int newWidth = GetWidthExUnicode(font, str, width, align, flags);
+                    int newWidth = GetWidthExUnicode(font, str, width, align, flags);
 
-            //    if (newWidth <= width)
-            //    {
-            //        sb.Append(str);
-            //        return sb.ToString();
-            //    }
-            //}
+                    if (newWidth <= width)
+                    {
+                        sb.Append(str);
+
+                        return sb.ToString();
+                    }
+                }
+            }
 
             if (isCropped)
             {

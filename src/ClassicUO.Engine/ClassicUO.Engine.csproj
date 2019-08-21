@@ -48,6 +48,10 @@
     <Compile Include="GameWindow.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Graphics\GL.cs" />
+    <Compile Include="Graphics\GraphicsDevice.cs" />
+    <Compile Include="Graphics\OpenGLException.cs" />
+    <Compile Include="Graphics\ShaderProgram.cs" />
+    <Compile Include="Graphics\VertexBuffer.cs" />
     <Compile Include="Input\InputEvent.cs" />
     <Compile Include="Input\InputKeyboardEvent.cs" />
     <Compile Include="Input\InputMouseEvent.cs" />
