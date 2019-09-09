@@ -481,11 +481,9 @@
     <EmbeddedResource Include="Renderer\fonts\regular_font.xnb" />
     <EmbeddedResource Include="Renderer\fonts\bold_font.xnb" />
     <None Include="packages.config" />
-    <None Include="README.md" />
     <None Include="shaders\compile_shaders.bat" />
     <None Include="shaders\IsometricWorld.fx" />
     <EmbeddedResource Include="shaders\IsometricWorld.fxc" />
-    <None Include="README.md" />
     <EmbeddedResource Include="shaders\xBR.fxc" />
   </ItemGroup>
   <ItemGroup>
