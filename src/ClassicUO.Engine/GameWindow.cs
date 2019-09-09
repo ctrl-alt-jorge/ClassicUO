@@ -22,7 +22,7 @@ namespace ClassicUO.Development
     using System;
     using SDL2;
 
-    public class GameWindow
+    public class GameWindow : IDisposable
     {
         internal GameWindow()
         {
@@ -35,7 +35,7 @@ namespace ClassicUO.Development
                 return;
             }
 
-            SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL;
+            SDL.SDL_WindowFlags windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
             Handle = SDL.SDL_CreateWindow("SDL Test", SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED, 640, 480, windowFlags);
 
             if (Handle == IntPtr.Zero)
@@ -46,7 +46,7 @@ namespace ClassicUO.Development
 
             SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
             SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION, 2);
-            SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_PROFILE_MASK, SDL.SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_CORE);
+            //SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_CONTEXT_PROFILE_MASK, SDL.SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_CORE);
             SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_DOUBLEBUFFER, 1);
 
             if (SDL.SDL_GL_CreateContext(Handle) == IntPtr.Zero)
@@ -61,5 +61,11 @@ namespace ClassicUO.Development
         internal IntPtr Handle { get; }
 
         internal bool Valid { get; }
+
+        public void Dispose()
+        {
+            SDL.SDL_DestroyWindow(Handle);
+            SDL.SDL_Quit();
+        }
     }
 }

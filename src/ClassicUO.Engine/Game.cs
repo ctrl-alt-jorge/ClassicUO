@@ -38,13 +38,14 @@ namespace ClassicUO.NewEngine
 
         public Game(string[] args)
         {
-#if FALSE    //  Set to false for original behaviour.
+#if !FALSE    //  Set to false for original behaviour.
             gameWindow = new Development.GameWindow();
 
             if (gameWindow.Valid)
             {
                 GL.LoadEntryPoints();
-                var shaderProgram = new ShaderProgram();
+                //var shaderProgram = new ShaderProgram();
+                graphicsDevice = new EngineNew.Graphics.GraphicsDevice();
                 TickNew();
                 return;
             }
@@ -136,23 +137,28 @@ namespace ClassicUO.NewEngine
 
         public void TickNew()
         {
-            while (true)
+            bool running = true;
+            while (running)
             {
-                SDL.SDL_PollEvent(out SDL.SDL_Event sdlEvent);
-
-                if (sdlEvent.type == SDL.SDL_EventType.SDL_KEYDOWN)
+                while (SDL.SDL_PollEvent(out SDL.SDL_Event sdlEvent) != 0)
                 {
-                    SDL.SDL_Quit();
-                    break;
+                    if (sdlEvent.type == SDL.SDL_EventType.SDL_QUIT)
+                    {
+                        Console.WriteLine("EXIT!");
+                        running = false;
+                    }
                 }
 
-                //GL.Clear(GL.GL_COLOR_BUFFER_BIT);
-                //GL.ClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+                GL.Clear(ClearBufferMask.ColorBufferBit);
+                GL.ClearColor(1.0f, 1.0f, 0.0f, 1.0f);
 
-                graphicsDevice.DrawPrimitives();
+                //graphicsDevice.DrawPrimitives();
 
                 SDL.SDL_GL_SwapWindow(gameWindow.Handle);
             }
+
+            
+            gameWindow.Dispose();
         }
     }
 }
