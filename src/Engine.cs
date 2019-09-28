@@ -44,6 +44,7 @@ using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Utility.Platforms;
 
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -492,6 +493,8 @@ namespace ClassicUO
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
+                Crashes.TrackError(e.ExceptionObject as Exception);
+
                 StringBuilder sb = new StringBuilder();
 #if DEV_BUILD
                 sb.AppendFormat("ClassicUO [dev] - v{0}\nOS: {1} {2}\nThread: {3}\n\n", Version, Environment.OSVersion.Platform, Environment.Is64BitOperatingSystem ? "x64" : "x86", Thread.CurrentThread.Name);
@@ -536,7 +539,7 @@ namespace ClassicUO
             Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + Path.Combine(ExePath, "Data", "Plugins"));
         }
 
-        protected override void Initialize()
+        protected override async void Initialize()
         {
             Log.NewLine();
             Log.NewLine();
@@ -573,6 +576,8 @@ namespace ClassicUO
             }
             catch (FileNotFoundException)
             {
+                await Crashes.SetEnabledAsync(false);
+
                 Log.Message(LogTypes.Error, "Wrong Ultima Online installation folder.");
 
                 throw;

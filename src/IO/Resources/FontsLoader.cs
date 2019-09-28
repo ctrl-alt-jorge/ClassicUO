@@ -35,6 +35,8 @@ using ClassicUO.Utility;
 using ClassicUO.Utility.Collections;
 using ClassicUO.Utility.Logging;
 
+using Microsoft.AppCenter.Crashes;
+
 namespace ClassicUO.IO.Resources
 {
     internal class FontsLoader : ResourceLoader
@@ -1596,6 +1598,8 @@ namespace ClassicUO.IO.Resources
             }
             catch (Exception ex)
             {
+                Crashes.TrackError(ex);
+
                 string path = Path.Combine(Engine.ExePath, "Logs");
                 FileSystemHelper.CreateFolderIfNotExists(path);
 

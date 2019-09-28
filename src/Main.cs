@@ -13,6 +13,10 @@ using ClassicUO.Network;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+
 namespace ClassicUO
 {
     static class Bootstrap
@@ -31,6 +35,10 @@ namespace ClassicUO
             if (!SkipUpdate)
                 if (CheckUpdate(args))
                     return;
+
+
+            AppCenter.Start("b33343ba-36df-4fd8-806d-2052b2786399",
+                            typeof(Analytics), typeof(Crashes));
 
             Engine.Run(args);
         }
