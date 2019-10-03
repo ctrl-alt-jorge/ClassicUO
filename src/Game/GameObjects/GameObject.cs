@@ -203,6 +203,8 @@ namespace ClassicUO.Game.GameObjects
             RealScreenPosition.X = _screenPosition.X - offsetX - 22;
             RealScreenPosition.Y = _screenPosition.Y - offsetY - 22;
             IsPositionChanged = false;
+
+            UpdateTextCoords();
         }
 
         public int DistanceTo(GameObject entity)
@@ -215,7 +217,43 @@ namespace ClassicUO.Game.GameObjects
             AddMessage(type, message, Engine.Profile.Current.ChatFont, Engine.Profile.Current.SpeechHue, true);
         }
 
-        public void UpdateTextCoords()
+        public virtual void UpdateTextCoords()
+        {
+            if (TextContainer == null)
+                return;
+
+            var last = TextContainer.Items;
+
+            while (last?.ListRight != null)
+                last = last.ListRight;
+
+            if (last == null)
+                return;
+
+            int offY = 0;
+            var scene = Engine.SceneManager.GetScene<GameScene>();
+            float scale = scene?.Scale ?? 1;
+
+
+            for (; last != null; last = last.ListLeft)
+            {
+                if (last.RenderedText != null && !last.RenderedText.IsDestroyed)
+                {
+                    if (offY == 0 && last.Time < Engine.Ticks)
+                        continue;
+
+                    last.OffsetY = offY;
+                    offY += last.RenderedText.Height;
+
+                    last.RealScreenPosition.X =(int)((RealScreenPosition.X - (last.RenderedText.Width >> 1)) / scale);
+                    last.RealScreenPosition.Y =(int)((RealScreenPosition.Y - offY) / scale);
+                }
+            }
+
+            FixTextCoordinatesInScreen();
+        }
+
+        public void UpdateTextCoords1()
         {
             if (TextContainer == null)
                 return;
@@ -234,8 +272,8 @@ namespace ClassicUO.Game.GameObjects
             int alwaysHP = Engine.Profile.Current.MobileHPShowWhen;
             int mode = Engine.Profile.Current.MobileHPType;
 
-            int startX = Engine.Profile.Current.GameWindowPosition.X + 6;
-            int startY = Engine.Profile.Current.GameWindowPosition.Y + 6;
+            //int startX = Engine.Profile.Current.GameWindowPosition.X + 6;
+            //int startY = Engine.Profile.Current.GameWindowPosition.Y + 6;
             var scene = Engine.SceneManager.GetScene<GameScene>();
             float scale = scene?.Scale ?? 1;
 
@@ -275,8 +313,8 @@ namespace ClassicUO.Game.GameObjects
                     }
                     else if (this is Item it && it.Container.IsValid)
                     {
-                        x = last.X - startX;
-                        y = last.Y - startY;
+                        x = last.X/* - startX*/;
+                        y = last.Y/* - startY*/;
                         scale = 1;
                     }
                     else if (Texture != null)
@@ -317,8 +355,8 @@ namespace ClassicUO.Game.GameObjects
                     last.OffsetY = offY;
                     offY += last.RenderedText.Height;
 
-                    last.RealScreenPosition.X = startX + (int) ((x - (last.RenderedText.Width >> 1)) / scale);
-                    last.RealScreenPosition.Y = startY + (int) ((y - offY) / scale);
+                    last.RealScreenPosition.X = /*startX +*/ (int) ((x - (last.RenderedText.Width >> 1)) / scale);
+                    last.RealScreenPosition.Y = /*startY +*/ (int) ((y - offY) / scale);
                 }
             }
 

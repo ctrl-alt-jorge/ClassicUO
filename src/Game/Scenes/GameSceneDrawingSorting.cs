@@ -190,10 +190,14 @@ namespace ClassicUO.Game.Scenes
             for (; obj != null; obj = obj.Right)
             {
                 if (obj.CurrentRenderIndex == _renderIndex || !obj.AllowedToDraw)
+                {
                     continue;
+                }
 
                 if (UpdateDrawPosition && obj.CurrentRenderIndex != _renderIndex || obj.IsPositionChanged)
+                {
                     obj.UpdateRealScreenPosition(_offset.X, _offset.Y);
+                }
 
                 obj.UseInRender = 0xFF;
 
@@ -308,7 +312,9 @@ namespace ClassicUO.Game.Scenes
                 obj.CurrentRenderIndex = _renderIndex;
 
                 if (!island)
-                    obj.UpdateTextCoords();
+                {
+                    //obj.UpdateTextCoords();
+                }
                 else
                     goto SKIP_INTERNAL_CHECK;
 
@@ -583,8 +589,8 @@ namespace ClassicUO.Game.Scenes
         {
             int oldDrawOffsetX = _offset.X;
             int oldDrawOffsetY = _offset.Y;
-            int winGamePosX = 0;
-            int winGamePosY = 0;
+            int winGamePosX = Engine.Profile.Current.GameWindowPosition.X;
+            int winGamePosY = Engine.Profile.Current.GameWindowPosition.Y;
             int winGameWidth = Engine.Profile.Current.GameWindowSize.X;
             int winGameHeight = Engine.Profile.Current.GameWindowSize.Y;
             int winGameCenterX = winGamePosX + (winGameWidth >> 1);
@@ -685,7 +691,9 @@ namespace ClassicUO.Game.Scenes
             int maxPixlesY = (int) newMaxY;
 
             if (UpdateDrawPosition || oldDrawOffsetX != winDrawOffsetX || oldDrawOffsetY != winDrawOffsetY)
+            {
                 UpdateDrawPosition = true;
+            }
 
             _minTile.X = realMinRangeX;
             _minTile.Y = realMinRangeY;

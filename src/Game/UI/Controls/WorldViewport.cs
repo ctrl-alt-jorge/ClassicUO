@@ -61,36 +61,49 @@ namespace ClassicUO.Game.UI.Controls
         {
             ResetHueVector();
 
-            if (Engine.Profile.Current != null && Engine.Profile.Current.UseXBR)
+            Rectangle scissor = ScissorStack.CalculateScissors(Matrix.Identity, x, y, Width, Height);
+
+            if (ScissorStack.PushScissors(scissor))
             {
-                // draw regular world
-                _xBR.SetSize(_scene.ViewportTexture.Width, _scene.ViewportTexture.Height);
+                batcher.EnableScissorTest(true);
+                {
+                    if (Engine.Profile.Current != null && Engine.Profile.Current.UseXBR)
+                    {
+                        // draw regular world
+                        _xBR.SetSize(_scene.ViewportTexture.Width, _scene.ViewportTexture.Height);
 
-                batcher.End();
+                        batcher.End();
 
-                batcher.Begin(_xBR);
-                batcher.Draw2D(_scene.ViewportTexture, x, y, Width, Height, ref _hueVector);
-                batcher.End();
+                        batcher.Begin(_xBR);
+                        batcher.Draw2D(_scene.ViewportTexture, 0, 0, ref _hueVector);
+                        batcher.End();
 
-                batcher.Begin();
+                        batcher.Begin();
+                    }
+                    else
+                        batcher.Draw2D(_scene.ViewportTexture, x, y, Width, Height, ref _hueVector);
+
+
+                    // draw lights
+                    if (_scene.UseLights)
+                    {
+                        batcher.SetBlendState(_blend);
+                        batcher.Draw2D(_scene.Darkness, x, y, Width, Height, ref _hueVector);
+                        batcher.SetBlendState(null);
+                    }
+
+                    // draw overheads
+                    _scene.DrawSelection(batcher, x, y);
+                    _scene.DrawOverheads(batcher, x, y);
+
+                    base.Draw(batcher, x, y);
+                }
+
+                batcher.EnableScissorTest(false);
+                ScissorStack.PopScissors();
             }
-            else
-                batcher.Draw2D(_scene.ViewportTexture, x, y, Width, Height, ref _hueVector);
 
-
-            // draw lights
-            if (_scene.UseLights)
-            {
-                batcher.SetBlendState(_blend);
-                batcher.Draw2D(_scene.Darkness, x, y, Width, Height, ref _hueVector);
-                batcher.SetBlendState(null);
-            }
-
-            // draw overheads
-            _scene.DrawSelection(batcher, x, y);
-            _scene.DrawOverheads(batcher, x, y);
-
-            return base.Draw(batcher, x, y);
+            return true;
         }
 
 

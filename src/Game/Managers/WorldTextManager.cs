@@ -74,6 +74,8 @@ namespace ClassicUO.Game.Managers
 
         public virtual void Draw(UltimaBatcher2D batcher, int startX, int startY, int renderIndex, bool isGump = false)
         {
+            //startX = startY = 0;
+
             ProcessWorldText(false);
 
             int mouseX = Mouse.Position.X;
@@ -276,7 +278,7 @@ namespace ClassicUO.Game.Managers
         {
             float scale = Engine.SceneManager.GetScene<GameScene>().Scale;
 
-            base.Draw(batcher, 0, 0, renderIndex, isGump);
+            base.Draw(batcher, startX, startY, renderIndex, isGump);
 
             foreach (KeyValuePair<Serial, OverheadDamage> overheadDamage in _damages)
             {

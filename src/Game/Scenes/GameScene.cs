@@ -443,6 +443,15 @@ namespace ClassicUO.Game.Scenes
                 }
             }
 
+            foreach (Mobile mobile in World.Mobiles)
+            {
+                if (mobile.UseInRender != _renderIndex && mobile.TextContainer != null)
+                {
+                    mobile.UpdateRealScreenPosition(_offset.X, _offset.Y);
+                    mobile.UseInRender = (byte)_renderIndex;
+                }
+            }
+
             _renderIndex++;
 
             if (_renderIndex >= 100)
@@ -471,13 +480,13 @@ namespace ClassicUO.Game.Scenes
             if (!World.InGame)
                 return;
 
-            if (_renderTarget == null || _renderTarget.Width != (int) (Engine.Profile.Current.GameWindowSize.X * Scale) || _renderTarget.Height != (int) (Engine.Profile.Current.GameWindowSize.Y * Scale))
+            if (_renderTarget == null || _renderTarget.Width != (int) (Engine.WindowWidth * Scale) || _renderTarget.Height != (int) (Engine.WindowHeight * Scale))
             {
                 _renderTarget?.Dispose();
                 _darkness?.Dispose();
 
-                _renderTarget = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.Profile.Current.GameWindowSize.X * Scale), (int) (Engine.Profile.Current.GameWindowSize.Y * Scale), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
-                _darkness = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.Profile.Current.GameWindowSize.X * Scale), (int) (Engine.Profile.Current.GameWindowSize.Y * Scale), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+                _renderTarget = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * Scale), (int) (Engine.WindowHeight * Scale), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+                _darkness = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * Scale), (int) (Engine.WindowHeight * Scale), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
             }
 
             World.Update(totalMS, frameMS);

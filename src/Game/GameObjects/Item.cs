@@ -349,6 +349,8 @@ namespace ClassicUO.Game.GameObjects
 
             ProcessAnimation(out _);
         }
+
+
         public override Graphic GetGraphicForAnimation()
         {
             Graphic graphic = Graphic;
