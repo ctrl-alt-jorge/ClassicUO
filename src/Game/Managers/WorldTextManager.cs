@@ -74,7 +74,7 @@ namespace ClassicUO.Game.Managers
 
         public virtual void Draw(UltimaBatcher2D batcher, int startX, int startY, int renderIndex, bool isGump = false)
         {
-            //startX = startY = 0;
+            startX = startY = 0;
 
             ProcessWorldText(false);
 

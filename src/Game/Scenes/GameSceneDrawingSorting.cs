@@ -605,21 +605,21 @@ namespace ClassicUO.Game.Scenes
             int winGameScaledWidth;
             int winGameScaledHeight;
 
-            if (Engine.Profile.Current != null && Engine.Profile.Current.EnableScaleZoom)
-            {
-                float left = winGamePosX;
-                float right = winGameWidth + left;
-                float top = winGamePosY;
-                float bottom = winGameHeight + top;
-                float newRight = right * Scale;
-                float newBottom = bottom * Scale;
+            //if (Engine.Profile.Current != null && Engine.Profile.Current.EnableScaleZoom)
+            //{
+            //    float left = winGamePosX;
+            //    float right = winGameWidth + left;
+            //    float top = winGamePosY;
+            //    float bottom = winGameHeight + top;
+            //    float newRight = right * Scale;
+            //    float newBottom = bottom * Scale;
 
-                winGameScaledOffsetX = (int)(left * Scale - (newRight - right));
-                winGameScaledOffsetY = (int)(top * Scale - (newBottom - bottom));
-                winGameScaledWidth = (int)(newRight - winGameScaledOffsetX);
-                winGameScaledHeight = (int)(newBottom - winGameScaledOffsetY);
-            }
-            else
+            //    winGameScaledOffsetX = (int)(left * Scale - (newRight - right));
+            //    winGameScaledOffsetY = (int)(top * Scale - (newBottom - bottom));
+            //    winGameScaledWidth = (int)(newRight - winGameScaledOffsetX);
+            //    winGameScaledHeight = (int)(newBottom - winGameScaledOffsetY);
+            //}
+            //else
             {
                 winGameScaledOffsetX = 0;
                 winGameScaledOffsetY = 0;

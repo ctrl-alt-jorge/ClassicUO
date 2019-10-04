@@ -554,8 +554,8 @@ namespace ClassicUO.Game.Scenes
             {
                 if (_viewPortGump != null)
                 {
-                    SelectedObject.TranslatedMousePositionByViewport.X = (int) ((Mouse.Position.X - _viewPortGump.ScreenCoordinateX) * Scale);
-                    SelectedObject.TranslatedMousePositionByViewport.Y = (int) ((Mouse.Position.Y - _viewPortGump.ScreenCoordinateY) * Scale);
+                    SelectedObject.TranslatedMousePositionByViewport.X = (int) ((Mouse.Position.X /*- _viewPortGump.ScreenCoordinateX*/) * Scale);
+                    SelectedObject.TranslatedMousePositionByViewport.Y = (int) ((Mouse.Position.Y /*- _viewPortGump.ScreenCoordinateY*/) * Scale);
                 }
                 else
                     SelectedObject.TranslatedMousePositionByViewport = Point.Zero;
