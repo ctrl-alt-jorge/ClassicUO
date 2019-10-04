@@ -81,14 +81,14 @@ namespace ClassicUO.Game.UI.Controls
                         batcher.Begin();
                     }
                     else
-                        batcher.Draw2D(_scene.ViewportTexture, x, y, Width, Height, ref _hueVector);
+                        batcher.Draw2D(_scene.ViewportTexture, 0, 0, ref _hueVector);
 
 
                     // draw lights
                     if (_scene.UseLights)
                     {
                         batcher.SetBlendState(_blend);
-                        batcher.Draw2D(_scene.Darkness, x, y, Width, Height, ref _hueVector);
+                        batcher.Draw2D(_scene.Darkness, 0, 0, ref _hueVector);
                         batcher.SetBlendState(null);
                     }
 
