@@ -638,6 +638,7 @@ namespace ClassicUO.Game.Scenes
 
             DrawWorld(batcher);
 
+
             return base.Draw(batcher);
         }
 
@@ -658,7 +659,25 @@ namespace ClassicUO.Game.Scenes
             SelectedObject.Object = null;
 
             batcher.GraphicsDevice.Clear(Color.Black);
-            batcher.GraphicsDevice.SetRenderTarget(_renderTarget);
+            var backup = batcher.GraphicsDevice.Viewport;
+
+            float left = _viewPortRect.X;
+            float right = _viewPortRect.Right;
+            float top = _viewPortRect.Y;
+            float bottom = _viewPortRect.Bottom;
+
+            float newRight = right * Scale;
+            float newBottom = bottom * Scale;
+
+            left = (left * Scale) - (newRight - right);
+            top = (top * Scale) - (newBottom - bottom);
+
+            batcher.GraphicsDevice.Viewport = new Viewport(_viewPortRect.X + 5, 
+                                                           _viewPortRect.Y + 5, 
+                                                           _viewPortGump.Width,
+                                                           _viewPortRect.Height);
+
+            //batcher.GraphicsDevice.SetRenderTarget(_renderTarget);
 
             //if (CircleOfTransparency.Circle == null)
             //    CircleOfTransparency.Create(200);
@@ -666,9 +685,12 @@ namespace ClassicUO.Game.Scenes
 
             //batcher.GraphicsDevice.Clear(ClearOptions.Stencil, new Vector4(0, 0, 0, 1), 0, 0);
 
-            batcher.SetBrightlight(Engine.Profile.Current.Brighlight);
+            //batcher.SetBrightlight(Engine.Profile.Current.Brighlight);
 
-            batcher.Begin();
+            var scaledMatrix = Matrix.CreateScale(Scale);
+            Matrix.Invert(ref scaledMatrix, out var newmatrix);
+            Matrix.CreateOrthographicOffCenter(left, newRight, newBottom, top, -150, 150, out Matrix projection);
+            batcher.Begin(null, newmatrix, projection);
 
             //batcher.SetStencil(s2);
 
@@ -705,12 +727,16 @@ namespace ClassicUO.Game.Scenes
             DrawLights(batcher);
 
             batcher.GraphicsDevice.SetRenderTarget(null);
+
+            batcher.GraphicsDevice.Viewport = backup;
         }
 
         private Item _multi;
 
         private void DrawLights(UltimaBatcher2D batcher)
         {
+            return;
+
             batcher.GraphicsDevice.SetRenderTarget(null);
             batcher.GraphicsDevice.SetRenderTarget(_darkness);
 

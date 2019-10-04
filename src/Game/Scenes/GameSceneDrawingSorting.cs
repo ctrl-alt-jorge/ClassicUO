@@ -585,6 +585,8 @@ namespace ClassicUO.Game.Scenes
             */
         }
 
+        private Rectangle _viewPortRect;
+
         private void GetViewPort()
         {
             int oldDrawOffsetX = _offset.X;
@@ -594,16 +596,16 @@ namespace ClassicUO.Game.Scenes
             int winGameWidth = Engine.Profile.Current.GameWindowSize.X;
             int winGameHeight = Engine.Profile.Current.GameWindowSize.Y;
             int winGameCenterX = winGamePosX + (winGameWidth >> 1);
-            int winGameCenterY = winGamePosY + (winGameHeight >> 1) + (World.Player.Z << 2);
+            int winGameCenterY = (winGamePosY + (winGameHeight >> 1)) + (World.Player.Z << 2);
             winGameCenterX -= (int) World.Player.Offset.X;
             winGameCenterY -= (int) (World.Player.Offset.Y - World.Player.Offset.Z);
             int winDrawOffsetX = (World.Player.X - World.Player.Y) * 22 - winGameCenterX;
             int winDrawOffsetY = (World.Player.X + World.Player.Y) * 22 - winGameCenterY;
 
-            int winGameScaledOffsetX;
-            int winGameScaledOffsetY;
-            int winGameScaledWidth;
-            int winGameScaledHeight;
+            //int winGameScaledOffsetX;
+            //int winGameScaledOffsetY;
+            //int winGameScaledWidth;
+            //int winGameScaledHeight;
 
             //if (Engine.Profile.Current != null && Engine.Profile.Current.EnableScaleZoom)
             //{
@@ -620,46 +622,51 @@ namespace ClassicUO.Game.Scenes
             //    winGameScaledHeight = (int)(newBottom - winGameScaledOffsetY);
             //}
             //else
-            {
-                winGameScaledOffsetX = 0;
-                winGameScaledOffsetY = 0;
-                winGameScaledWidth = 0;
-                winGameScaledHeight = 0;
-            }
+            //{
+            //    winGameScaledOffsetX = 0;
+            //    winGameScaledOffsetY = 0;
+            //    winGameScaledWidth = 0;
+            //    winGameScaledHeight = 0;
+            //}
+
+            _viewPortRect.X = winGamePosX;
+            _viewPortRect.Y = winGamePosY;
+            _viewPortRect.Width = winGameWidth;
+            _viewPortRect.Height = winGameHeight;
 
 
             int width = (int) ((winGameWidth / 44 + 1) * Scale);
             int height = (int) ((winGameHeight / 44 + 1) * Scale);
 
-            winDrawOffsetX += winGameScaledOffsetX >> 1;
-            winDrawOffsetY += winGameScaledOffsetY >> 1;
+            //winDrawOffsetX += winGameScaledOffsetX >> 1;
+            //winDrawOffsetY += winGameScaledOffsetY >> 1;
 
-            const int MAX = 70;
+            //const int MAX = 70;
 
-            if (width > MAX)
-                width = MAX;
+            //if (width > MAX)
+            //    width = MAX;
 
-            if (height > MAX)
-                height = MAX;
+            //if (height > MAX)
+            //    height = MAX;
 
-            int size = Math.Max(width, height);
+            if (width < height)
+                width = height;
+            else
+                height = width;
 
-            if (size < World.ClientViewRange)
-                size = World.ClientViewRange;
-
-            int realMinRangeX = World.Player.X - size;
+            int realMinRangeX = World.Player.X - width;
 
             if (realMinRangeX < 0)
                 realMinRangeX = 0;
-            int realMaxRangeX = World.Player.X + size;
+            int realMaxRangeX = World.Player.X + width;
 
             //if (realMaxRangeX >= FileManager.Map.MapsDefaultSize[World.Map.Index][0])
             //    realMaxRangeX = FileManager.Map.MapsDefaultSize[World.Map.Index][0];
-            int realMinRangeY = World.Player.Y - size;
+            int realMinRangeY = World.Player.Y - height;
 
             if (realMinRangeY < 0)
                 realMinRangeY = 0;
-            int realMaxRangeY = World.Player.Y + size;
+            int realMaxRangeY = World.Player.Y + height;
 
             //if (realMaxRangeY >= FileManager.Map.MapsDefaultSize[World.Map.Index][1])
             //    realMaxRangeY = FileManager.Map.MapsDefaultSize[World.Map.Index][1];
@@ -685,9 +692,9 @@ namespace ClassicUO.Game.Scenes
             float maxY = winGamePosY + winGameHeight + drawOffset;
             float newMaxX = maxX * Scale;
             float newMaxY = maxY * Scale;
-            int minPixelsX = (int) ((winGamePosX - drawOffset) * Scale - MAX /*- (newMaxX + maxX)*/);
+            int minPixelsX = (int) (((winGamePosX - drawOffset) * Scale) - (newMaxX - maxX));
             int maxPixelsX = (int) newMaxX;
-            int minPixelsY = (int) ((winGamePosY - drawOffset) * Scale - MAX /*- (newMaxY + maxY)*/);
+            int minPixelsY = (int) (((winGamePosY - drawOffset) * Scale) - (newMaxY - maxY));
             int maxPixlesY = (int) newMaxY;
 
             if (UpdateDrawPosition || oldDrawOffsetX != winDrawOffsetX || oldDrawOffsetY != winDrawOffsetY)

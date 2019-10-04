@@ -908,7 +908,7 @@ namespace ClassicUO.Game.Managers
         {
             SortControlsByInfo();
 
-            batcher.GraphicsDevice.Clear(Color.Transparent);
+            //batcher.GraphicsDevice.Clear(Color.Transparent);
 
             batcher.Begin();
 

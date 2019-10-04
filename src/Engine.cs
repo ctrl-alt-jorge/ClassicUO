@@ -745,6 +745,7 @@ namespace ClassicUO
 
             _uiManager.Draw(_batcher);
 
+
             if (_profileManager.Current != null && _profileManager.Current.ShowNetworkStats)
             {
                 if (!NetClient.Socket.IsConnected)

@@ -59,6 +59,8 @@ namespace ClassicUO.Game.UI.Controls
 
         public override bool Draw(UltimaBatcher2D batcher, int x, int y)
         {
+            return true;
+
             ResetHueVector();
 
             Rectangle scissor = ScissorStack.CalculateScissors(Matrix.Identity, x, y, Width, Height);
@@ -102,13 +104,14 @@ namespace ClassicUO.Game.UI.Controls
                             y - offset + halfHeight,
                             size,
                             size,
-                            
+
                             sx - size_zoom_half,
                             sy - size_zoom_half,
                             size_zoom,
                             size_zoom,
 
                             ref _hueVector);
+
                         batcher.End();
 
                         batcher.Begin();

@@ -56,8 +56,9 @@ namespace ClassicUO.Renderer
         private int _numSprites;
         //private readonly IntPtr _ptrVertexBufferArray;
         private GCHandle _handle;
-        private Matrix _matrix;
-
+        private Matrix _projection = new Matrix(0f, //(float)( 2.0 / (double)viewport.Width ) is the actual value we will use
+                                                    0.0f, 0.0f, 0.0f, 0.0f, 0f, //(float)( -2.0 / (double)viewport.Height ) is the actual value we will use
+                                                    0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f);
         public UltimaBatcher2D(GraphicsDevice device)
         {
             GraphicsDevice = device;
@@ -1575,6 +1576,8 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         private bool CheckInScreen(int index)
         {
+            return true;
+
             for (byte i = 0; i < 4; i++)
             {
                 _drawingArea.Contains(ref _vertexInfo[index + i].Position, out ContainmentType res);
@@ -1588,17 +1591,17 @@ namespace ClassicUO.Renderer
         [MethodImpl(256)]
         public void Begin()
         {
-            Begin(null, Matrix.Identity);
+            Begin(null, Matrix.Identity, _projection);
         }
 
         [MethodImpl(256)]
         public void Begin(MatrixEffect effect)
         {
-            Begin(effect, Matrix.Identity);
+            Begin(effect, Matrix.Identity, _projection);
         }
 
         [MethodImpl(256)]
-        public void Begin(MatrixEffect customEffect, Matrix projection)
+        public void Begin(MatrixEffect customEffect, Matrix matrix, Matrix projection)
         {
             EnsureNotStarted();
             _started = true;
@@ -1614,10 +1617,14 @@ namespace ClassicUO.Renderer
 
             if (_customEffect != null)
             {
-                _customEffect.Matrix = projection;
+                _customEffect.Matrix = matrix;
+                _customEffect.ProjectionMatrix = projection;
             }
             else
-                DefaultEffect.Matrix = projection;
+            {
+                DefaultEffect.Matrix = matrix;
+                DefaultEffect.ProjectionMatrix = projection;
+            }
         }
 
         [MethodImpl(256)]
