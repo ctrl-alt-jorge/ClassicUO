@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
+using ClassicUO.Input;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
@@ -475,7 +476,7 @@ namespace ClassicUO.Game.GameObjects
                     }
 
                     owner.Texture = frame;
-                    owner.Select(mirror ? x + frame.Width - SelectedObject.TranslatedMousePositionByViewport.X : SelectedObject.TranslatedMousePositionByViewport.X - x, SelectedObject.TranslatedMousePositionByViewport.Y - y);
+                    owner.Select(mirror ? x + frame.Width -  Mouse.Position.X :  Mouse.Position.X - x,  Mouse.Position.Y - y);
 
                     if (entity != null && entity.ItemData.IsLight)
                         Engine.SceneManager.GetScene<GameScene>().AddLight(owner, entity, mirror ? x + frame.Width : x, y);

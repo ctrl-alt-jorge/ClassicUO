@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
+using ClassicUO.Input;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
@@ -295,7 +296,7 @@ namespace ClassicUO.Game.GameObjects
                 }
 
                 DrawInternal(batcher, posX, posY);
-                Select(IsFlipped ? posX + x + 44 - SelectedObject.TranslatedMousePositionByViewport.X : SelectedObject.TranslatedMousePositionByViewport.X - posX + x, SelectedObject.TranslatedMousePositionByViewport.Y - posY - y);
+                Select(IsFlipped ? posX + x + 44 -  Mouse.Position.X :  Mouse.Position.X - posX + x,  Mouse.Position.Y - posY - y);
             }
         }
 

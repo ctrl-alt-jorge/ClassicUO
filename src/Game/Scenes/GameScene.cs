@@ -550,16 +550,6 @@ namespace ClassicUO.Game.Scenes
 
             if (!IsMouseOverViewport)
                 SelectedObject.Object = SelectedObject.LastObject = null;
-            else
-            {
-                if (_viewPortGump != null)
-                {
-                    SelectedObject.TranslatedMousePositionByViewport.X = (int) ((Mouse.Position.X /*- _viewPortGump.ScreenCoordinateX*/) * Scale);
-                    SelectedObject.TranslatedMousePositionByViewport.Y = (int) ((Mouse.Position.Y /*- _viewPortGump.ScreenCoordinateY*/) * Scale);
-                }
-                else
-                    SelectedObject.TranslatedMousePositionByViewport = Point.Zero;
-            }
 
             if (TargetManager.IsTargeting && TargetManager.TargetingState == CursorTarget.MultiPlacement)
             {

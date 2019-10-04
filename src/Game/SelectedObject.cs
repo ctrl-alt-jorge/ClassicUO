@@ -26,6 +26,7 @@ using System.Runtime.CompilerServices;
 
 using ClassicUO.Game.Data;
 using ClassicUO.Game.GameObjects;
+using ClassicUO.Input;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
@@ -38,7 +39,6 @@ namespace ClassicUO.Game
 {
     internal static class SelectedObject
     {
-        public static Point TranslatedMousePositionByViewport;
         public static BaseGameObject Object { get; set; }
         public static BaseGameObject LastObject { get; set; }
 
@@ -130,11 +130,11 @@ namespace ClassicUO.Game
                     int y = -drawY - (frame.Height + frame.CenterY) + drawCenterY;
 
                     if (mirror)
-                        x = xx + x + 44 - TranslatedMousePositionByViewport.X;
+                        x = xx + x + 44 - Mouse.Position.X;
                     else
-                        x = TranslatedMousePositionByViewport.X - xx + x;
+                        x = Mouse.Position.X - xx + x;
 
-                    y = TranslatedMousePositionByViewport.Y - yy - y;
+                    y = Mouse.Position.Y - yy - y;
 
                     if (frame.Contains(x, y))
                         return true;
@@ -223,11 +223,11 @@ namespace ClassicUO.Game
                     int y = -drawY - (frame.Height + frame.CenterY) + drawCenterY;
 
                     if (mirror)
-                        x = xx + x + 44 - TranslatedMousePositionByViewport.X;
+                        x = xx + x + 44 -  Mouse.Position.X;
                     else
-                        x = TranslatedMousePositionByViewport.X - xx + x;
+                        x =  Mouse.Position.X - xx + x;
 
-                    y = TranslatedMousePositionByViewport.Y - yy + y;
+                    y =  Mouse.Position.Y - yy + y;
 
                     if (frame.Contains(x, y))
                         return true;
@@ -241,14 +241,14 @@ namespace ClassicUO.Game
         [MethodImpl(256)]
         public static bool IsPointInStatic(UOTexture texture, int x, int y)
         {
-            return texture != null && texture.Contains(TranslatedMousePositionByViewport.X - x, TranslatedMousePositionByViewport.Y - y);
+            return texture != null && texture.Contains( Mouse.Position.X - x,  Mouse.Position.Y - y);
         }
 
         [MethodImpl(256)]
         public static bool IsPointInLand(UOTexture texture, int x, int y)
         {
-            x = TranslatedMousePositionByViewport.X - x;
-            y = TranslatedMousePositionByViewport.Y - y;
+            x =  Mouse.Position.X - x;
+            y =  Mouse.Position.Y - y;
             return texture != null && x >= 0 && x < 44 && y >= 0 && y < 44 && _InternalArea[x, y];
         }
 
@@ -257,8 +257,8 @@ namespace ClassicUO.Game
             //y -= 22;
             x += 22;
 
-            int testX = TranslatedMousePositionByViewport.X - x;
-            int testY = TranslatedMousePositionByViewport.Y;
+            int testX =  Mouse.Position.X - x;
+            int testY =  Mouse.Position.Y;
 
             int y0 = -rect.Left;
             int y1 = 22 - rect.Top;
