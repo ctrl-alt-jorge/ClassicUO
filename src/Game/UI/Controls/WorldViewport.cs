@@ -62,6 +62,7 @@ namespace ClassicUO.Game.UI.Controls
             ResetHueVector();
 
             Rectangle scissor = ScissorStack.CalculateScissors(Matrix.Identity, x, y, Width, Height);
+            float scale = Engine.SceneManager.GetScene<GameScene>().Scale;
 
             if (ScissorStack.PushScissors(scissor))
             {
@@ -75,7 +76,39 @@ namespace ClassicUO.Game.UI.Controls
                         batcher.End();
 
                         batcher.Begin(_xBR);
-                        batcher.Draw2D(_scene.ViewportTexture, 0, 0, ref _hueVector);
+                        //batcher.Draw2D(_scene.ViewportTexture,
+                        //    0, 
+                        //    0, 
+                        //    _scene.ViewportTexture.Width, 
+                        //    _scene.ViewportTexture.Height,   
+                        //    ref _hueVector); 
+
+                        int size = (int) MathHelper.Max(Width, Height);
+
+                        int size_zoom = (int) (size * scale);
+                        int size_zoom_half = size_zoom >> 1;
+
+                        int halfWidth = Width >> 1;
+                        int halfHeight = Height >> 1;
+
+                        int offset = size >> 1;
+
+                        int sx = x + Width / 2;
+                        int sy = y + Height / 2;
+
+
+                        batcher.Draw2D(_scene.ViewportTexture,
+                            x - offset + halfWidth,
+                            y - offset + halfHeight,
+                            size,
+                            size,
+                            
+                            sx - size_zoom_half,
+                            sy - size_zoom_half,
+                            size_zoom,
+                            size_zoom,
+
+                            ref _hueVector);
                         batcher.End();
 
                         batcher.Begin();

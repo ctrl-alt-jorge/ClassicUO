@@ -48,7 +48,7 @@ namespace ClassicUO.Renderer
         private readonly Texture2D[] _textureInfo;
         private readonly PositionNormalTextureColor[] _vertexInfo;
         private BlendState _blendState;
-        private Effect _customEffect;
+        private MatrixEffect _customEffect;
         private bool _started;
         private DepthStencilState _stencil;
         private bool _useScissor;
@@ -56,6 +56,7 @@ namespace ClassicUO.Renderer
         private int _numSprites;
         //private readonly IntPtr _ptrVertexBufferArray;
         private GCHandle _handle;
+        private Matrix _matrix;
 
         public UltimaBatcher2D(GraphicsDevice device)
         {
@@ -1591,17 +1592,17 @@ namespace ClassicUO.Renderer
         }
 
         [MethodImpl(256)]
-        public void Begin(Effect effect)
+        public void Begin(MatrixEffect effect)
         {
             Begin(effect, Matrix.Identity);
         }
 
         [MethodImpl(256)]
-        public void Begin(Effect customEffect, Matrix projection)
+        public void Begin(MatrixEffect customEffect, Matrix projection)
         {
             EnsureNotStarted();
             _started = true;
-
+            
             _drawingArea.Min.X = 0;
             _drawingArea.Min.Y = 0;
             _drawingArea.Min.Z = -150;
@@ -1610,6 +1611,13 @@ namespace ClassicUO.Renderer
             _drawingArea.Max.Z = 150;
 
             _customEffect = customEffect;
+
+            if (_customEffect != null)
+            {
+                _customEffect.Matrix = projection;
+            }
+            else
+                DefaultEffect.Matrix = projection;
         }
 
         [MethodImpl(256)]
@@ -1764,7 +1772,6 @@ namespace ClassicUO.Renderer
         private class IsometricEffect : MatrixEffect
         {
             private Vector2 _viewPort;
-            private Matrix _matrix = Matrix.Identity;
 
             public IsometricEffect(GraphicsDevice graphicsDevice) : base(graphicsDevice, Resources.IsometricEffect)
             {
@@ -1787,7 +1794,7 @@ namespace ClassicUO.Renderer
 
             public override void ApplyStates()
             {
-                WorldMatrix.SetValueRef(ref _matrix);
+                WorldMatrix.SetValueRef(ref Matrix);
 
                 _viewPort.X = GraphicsDevice.Viewport.Width;
                 _viewPort.Y = GraphicsDevice.Viewport.Height;

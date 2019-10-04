@@ -480,13 +480,13 @@ namespace ClassicUO.Game.Scenes
             if (!World.InGame)
                 return;
 
-            if (_renderTarget == null || _renderTarget.Width != (int) (Engine.WindowWidth * Scale) || _renderTarget.Height != (int) (Engine.WindowHeight * Scale))
+            if (_renderTarget == null || _renderTarget.Width != (int) (Engine.WindowWidth * 1) || _renderTarget.Height != (int) (Engine.WindowHeight * 1))
             {
                 _renderTarget?.Dispose();
                 _darkness?.Dispose();
 
-                _renderTarget = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * Scale), (int) (Engine.WindowHeight * Scale), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
-                _darkness = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * Scale), (int) (Engine.WindowHeight * Scale), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+                _renderTarget = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * 1), (int) (Engine.WindowHeight * 1), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+                _darkness = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * 1), (int) (Engine.WindowHeight * 1), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
             }
 
             World.Update(totalMS, frameMS);

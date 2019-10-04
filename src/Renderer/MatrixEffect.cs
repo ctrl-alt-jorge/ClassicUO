@@ -42,6 +42,7 @@ namespace ClassicUO.Renderer
         {
         }
 
+        public Matrix Matrix = Matrix.Identity;
 
 
         public EffectParameter MatrixTransform { get; }
@@ -56,8 +57,7 @@ namespace ClassicUO.Renderer
             _projectionMatrix.M11 = (float) (2.0 / viewport.Width);
             _projectionMatrix.M22 = (float) (-2.0 / viewport.Height);
 
-            Matrix idendity = Matrix.Identity;
-            Matrix.Multiply(ref idendity, ref _projectionMatrix, out var matrixTransform);
+            Matrix.Multiply(ref Matrix, ref _projectionMatrix, out var matrixTransform);
 
             MatrixTransform.SetValue(matrixTransform);
 
