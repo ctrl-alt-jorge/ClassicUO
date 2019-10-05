@@ -275,7 +275,7 @@ namespace ClassicUO.Game.Scenes
             Engine.UI?.Clear();
             World.Clear();
 
-          
+            _blend?.Dispose();
             _useItemQueue?.Clear();
             _useItemQueue = null;
             Hotkeys = null;
@@ -480,14 +480,14 @@ namespace ClassicUO.Game.Scenes
             if (!World.InGame)
                 return;
 
-            if (_renderTarget == null || _renderTarget.Width != (int) (Engine.WindowWidth * 1) || _renderTarget.Height != (int) (Engine.WindowHeight * 1))
-            {
-                _renderTarget?.Dispose();
-                _darkness?.Dispose();
+            //if (_renderTarget == null || _renderTarget.Width != (int) (Engine.WindowWidth * 1) || _renderTarget.Height != (int) (Engine.WindowHeight * 1))
+            //{
+            //    _renderTarget?.Dispose();
+            //    _darkness?.Dispose();
 
-                _renderTarget = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * 1), (int) (Engine.WindowHeight * 1), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
-                _darkness = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * 1), (int) (Engine.WindowHeight * 1), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
-            }
+            //    _renderTarget = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * 1), (int) (Engine.WindowHeight * 1), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+            //    _darkness = new RenderTarget2D(Engine.Batcher.GraphicsDevice, (int) (Engine.WindowWidth * 1), (int) (Engine.WindowHeight * 1), false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+            //}
 
             World.Update(totalMS, frameMS);
             Pathfinder.ProcessAutoWalk();
@@ -685,7 +685,7 @@ namespace ClassicUO.Game.Scenes
 
             //batcher.GraphicsDevice.Clear(ClearOptions.Stencil, new Vector4(0, 0, 0, 1), 0, 0);
 
-            //batcher.SetBrightlight(Engine.Profile.Current.Brighlight);
+            batcher.SetBrightlight(Engine.Profile.Current.Brighlight);
 
             Matrix scaledMatrix = Matrix.CreateScale(Scale);
             Matrix.Invert(ref scaledMatrix, out var newmatrix);
@@ -721,52 +721,43 @@ namespace ClassicUO.Game.Scenes
             }
 
             // batcher.SetStencil(null);
-
-
-
             batcher.End();
-            DrawLights(batcher, scaledMatrix, proj);
-           
-            batcher.GraphicsDevice.SetRenderTarget(null);
 
-            batcher.GraphicsDevice.Viewport = backup;
+
+            DrawLights(batcher, scaledMatrix, proj, backup);
+
         }
 
         private Item _multi;
 
-        private void DrawLights(UltimaBatcher2D batcher, Matrix matrix, Matrix proj)
+        private void DrawLights(UltimaBatcher2D batcher, Matrix matrix, Matrix proj, Viewport backup)
         {
-            //batcher.GraphicsDevice.Clear((ClearOptions) 0,  Color.Transparent, 0, 0);
-            SDL2EX.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-            //batcher.GraphicsDevice.SetRenderTarget(null);
-            //batcher.GraphicsDevice.SetRenderTarget(_darkness);
-
             var lightColor = World.Light.IsometricLevel;
 
             if (Engine.Profile.Current.UseDarkNights)
                 lightColor -= 0.02f;
 
             _vectorClear.X = _vectorClear.Y = _vectorClear.Z = lightColor;
-          
+
 
             if (_deathScreenActive || !UseLights)
+            {
+                batcher.GraphicsDevice.Viewport = backup;
                 return;
+            }
 
+            batcher.GraphicsDevice.SetRenderTarget(null);
+            batcher.GraphicsDevice.SetRenderTarget(_darkness);
 
+            batcher.GraphicsDevice.Clear(ClearOptions.Target, _vectorClear, 0, 0);
+
+            int offsetX = _viewPortRect.X - _gameWindowScaledOffsetRect.X;
+            int offsetY = _viewPortRect.Y - _gameWindowScaledOffsetRect.Y;
+
+            matrix.Translation = new Vector3(offsetX, offsetY, 0);
             batcher.Begin(null, matrix, proj);
-  
-            batcher.GraphicsDevice.Clear(ClearOptions.DepthBuffer,
-                                         _vectorClear, 0, 1);
-            //batcher.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
-
-            //SDL2EX.glClearColor(lightColor, lightColor, lightColor, 1.0f);
-            //SDL2EX.glClear(0x00004000);
-            //SDL2EX.glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-
-
             batcher.SetBlendState(BlendState.Additive);
-           
+
             Vector3 hue = Vector3.Zero;
 
             for (int i = 0; i < _lightCount; i++)
@@ -784,10 +775,40 @@ namespace ClassicUO.Game.Scenes
 
             _lightCount = 0;
 
+            batcher.SetBlendState(null);
+            batcher.End();
+
+            batcher.GraphicsDevice.SetRenderTarget(null);
+            batcher.GraphicsDevice.Viewport = backup;
+
+            hue.X = 0;
+            hue.Y = 0;
+            hue.Z = 0;
+
+            batcher.Begin();
+            batcher.SetBlendState(_blend);
+
+
+            if (Engine.Profile.Current != null && Engine.Profile.Current.EnableScaleZoom)
+            {
+                batcher.Draw2D(_darkness, _gameWindowScaledOffsetRect.X + 5, _gameWindowScaledOffsetRect.Y + 5, ref hue);
+            }
+            else
+            {
+                batcher.Draw2D(_darkness, _viewPortRect.X + 5, _viewPortRect.Y + 5, ref hue);
+            }
 
             batcher.SetBlendState(null);
             batcher.End();
         }
+
+        private readonly BlendState _blend = new BlendState
+        {
+            ColorSourceBlend = Blend.Zero,
+            ColorDestinationBlend = Blend.SourceColor,
+
+            ColorBlendFunction = BlendFunction.Add
+        };
 
         public void DrawOverheads(UltimaBatcher2D batcher, int x, int y)
         {

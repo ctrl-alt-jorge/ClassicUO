@@ -33,6 +33,7 @@ using ClassicUO.IO.Resources;
 using ClassicUO.Utility;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ClassicUO.Game.Scenes
 {
@@ -585,7 +586,7 @@ namespace ClassicUO.Game.Scenes
             */
         }
 
-        private Rectangle _viewPortRect;
+        private Rectangle _viewPortRect, _gameWindowScaledOffsetRect;
 
         private void GetViewPort()
         {
@@ -602,37 +603,42 @@ namespace ClassicUO.Game.Scenes
             int winDrawOffsetX = (World.Player.X - World.Player.Y) * 22 - winGameCenterX;
             int winDrawOffsetY = (World.Player.X + World.Player.Y) * 22 - winGameCenterY;
 
-            //int winGameScaledOffsetX;
-            //int winGameScaledOffsetY;
-            //int winGameScaledWidth;
-            //int winGameScaledHeight;
+            int winGameScaledOffsetX;
+            int winGameScaledOffsetY;
+            int winGameScaledWidth;
+            int winGameScaledHeight;
 
-            //if (Engine.Profile.Current != null && Engine.Profile.Current.EnableScaleZoom)
-            //{
-            //    float left = winGamePosX;
-            //    float right = winGameWidth + left;
-            //    float top = winGamePosY;
-            //    float bottom = winGameHeight + top;
-            //    float newRight = right * Scale;
-            //    float newBottom = bottom * Scale;
+            if (Engine.Profile.Current != null && Engine.Profile.Current.EnableScaleZoom)
+            {
+                float left = winGamePosX;
+                float right = winGameWidth + left;
+                float top = winGamePosY;
+                float bottom = winGameHeight + top;
+                float newRight = right * Scale;
+                float newBottom = bottom * Scale;
 
-            //    winGameScaledOffsetX = (int)(left * Scale - (newRight - right));
-            //    winGameScaledOffsetY = (int)(top * Scale - (newBottom - bottom));
-            //    winGameScaledWidth = (int)(newRight - winGameScaledOffsetX);
-            //    winGameScaledHeight = (int)(newBottom - winGameScaledOffsetY);
-            //}
-            //else
-            //{
-            //    winGameScaledOffsetX = 0;
-            //    winGameScaledOffsetY = 0;
-            //    winGameScaledWidth = 0;
-            //    winGameScaledHeight = 0;
-            //}
+                winGameScaledOffsetX = (int)(left * Scale - (newRight - right));
+                winGameScaledOffsetY = (int)(top * Scale - (newBottom - bottom));
+                winGameScaledWidth = (int)(newRight - winGameScaledOffsetX);
+                winGameScaledHeight = (int)(newBottom - winGameScaledOffsetY);
+            }
+            else
+            {
+                winGameScaledOffsetX = 0;
+                winGameScaledOffsetY = 0;
+                winGameScaledWidth = 0;
+                winGameScaledHeight = 0;
+            }
 
             _viewPortRect.X = winGamePosX;
             _viewPortRect.Y = winGamePosY;
             _viewPortRect.Width = winGameWidth;
             _viewPortRect.Height = winGameHeight;
+
+            _gameWindowScaledOffsetRect.X = winGameScaledOffsetX;
+            _gameWindowScaledOffsetRect.Y = winGameScaledOffsetY;
+            _gameWindowScaledOffsetRect.Width = winGameScaledWidth;
+            _gameWindowScaledOffsetRect.Height = winGameScaledHeight;
 
 
             int width = (int) ((winGameWidth / 44 + 1) * Scale);
@@ -715,6 +721,15 @@ namespace ClassicUO.Game.Scenes
             _offset.X = winDrawOffsetX;
             _offset.Y = winDrawOffsetY;
 
+            if (_darkness == null || _darkness.IsDisposed ||
+                _darkness.IsContentLost || _darkness.Width != _viewPortRect.Width ||
+                _darkness.Height != _viewPortRect.Height)
+            {
+                _darkness?.Dispose();
+                _darkness = new RenderTarget2D(Engine.Batcher.GraphicsDevice,
+                                               _viewPortRect.Width, _viewPortRect.Height, false,
+                                               SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.DiscardContents);
+            }
 
             UpdateMaxDrawZ();
         }
