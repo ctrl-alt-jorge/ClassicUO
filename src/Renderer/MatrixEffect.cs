@@ -54,8 +54,9 @@ namespace ClassicUO.Renderer
         public virtual void ApplyStates()
         {
             Viewport viewport = GraphicsDevice.Viewport;
-            ProjectionMatrix.M11 = (float) (2.0 / viewport.Width);
-            ProjectionMatrix.M22 = (float) (-2.0 / viewport.Height);
+
+            ProjectionMatrix.M11 = (float)(2.0 / (double)viewport.Width);
+            ProjectionMatrix.M22 = (float)(-2.0 / (double)viewport.Height);
 
             Matrix.Multiply(ref Matrix, ref ProjectionMatrix, out var matrixTransform);
 

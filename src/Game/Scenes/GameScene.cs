@@ -687,12 +687,13 @@ namespace ClassicUO.Game.Scenes
 
             //batcher.SetBrightlight(Engine.Profile.Current.Brighlight);
 
-            var scaledMatrix = Matrix.CreateScale(Scale);
+            Matrix scaledMatrix = Matrix.CreateScale(Scale);
             Matrix.Invert(ref scaledMatrix, out var newmatrix);
-            Matrix.CreateOrthographicOffCenter(left, newRight, newBottom, top, -150, 150, out Matrix projection);
-            batcher.Begin(null, newmatrix, projection);
+            Matrix proj = Matrix.CreateOrthographicOffCenter(left, newRight, newBottom, top, -150, 150);
 
-            //batcher.SetStencil(s2);
+            batcher.Begin(null, newmatrix, proj);
+
+           // batcher.SetStencil(s2);
 
             if (!_deathScreenActive)
             {
@@ -719,13 +720,13 @@ namespace ClassicUO.Game.Scenes
                     _multi.Draw(batcher, _multi.RealScreenPosition.X, _multi.RealScreenPosition.Y);
             }
 
-            //batcher.SetStencil(null);
+            // batcher.SetStencil(null);
+
+
 
             batcher.End();
-
-
-            DrawLights(batcher);
-
+            DrawLights(batcher, scaledMatrix, proj);
+           
             batcher.GraphicsDevice.SetRenderTarget(null);
 
             batcher.GraphicsDevice.Viewport = backup;
@@ -733,12 +734,13 @@ namespace ClassicUO.Game.Scenes
 
         private Item _multi;
 
-        private void DrawLights(UltimaBatcher2D batcher)
+        private void DrawLights(UltimaBatcher2D batcher, Matrix matrix, Matrix proj)
         {
-            return;
+            //batcher.GraphicsDevice.Clear((ClearOptions) 0,  Color.Transparent, 0, 0);
+            SDL2EX.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-            batcher.GraphicsDevice.SetRenderTarget(null);
-            batcher.GraphicsDevice.SetRenderTarget(_darkness);
+            //batcher.GraphicsDevice.SetRenderTarget(null);
+            //batcher.GraphicsDevice.SetRenderTarget(_darkness);
 
             var lightColor = World.Light.IsometricLevel;
 
@@ -746,16 +748,25 @@ namespace ClassicUO.Game.Scenes
                 lightColor -= 0.02f;
 
             _vectorClear.X = _vectorClear.Y = _vectorClear.Z = lightColor;
-
-            batcher.GraphicsDevice.Clear(Color.Black);
-            batcher.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil, _vectorClear, 0, 0);
+          
 
             if (_deathScreenActive || !UseLights)
                 return;
 
-            batcher.Begin();
-            batcher.SetBlendState(BlendState.Additive);
 
+            batcher.Begin(null, matrix, proj);
+  
+            batcher.GraphicsDevice.Clear(ClearOptions.DepthBuffer,
+                                         _vectorClear, 0, 1);
+            //batcher.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
+
+            //SDL2EX.glClearColor(lightColor, lightColor, lightColor, 1.0f);
+            //SDL2EX.glClear(0x00004000);
+            //SDL2EX.glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+
+
+            batcher.SetBlendState(BlendState.Additive);
+           
             Vector3 hue = Vector3.Zero;
 
             for (int i = 0; i < _lightCount; i++)
@@ -772,6 +783,7 @@ namespace ClassicUO.Game.Scenes
             }
 
             _lightCount = 0;
+
 
             batcher.SetBlendState(null);
             batcher.End();

@@ -1601,6 +1601,12 @@ namespace ClassicUO.Renderer
         }
 
         [MethodImpl(256)]
+        public void Begin(MatrixEffect effect, Matrix matrix)
+        {
+            Begin(effect, matrix, _projection);
+        }
+
+        [MethodImpl(256)]
         public void Begin(MatrixEffect customEffect, Matrix matrix, Matrix projection)
         {
             EnsureNotStarted();
@@ -1801,7 +1807,7 @@ namespace ClassicUO.Renderer
 
             public override void ApplyStates()
             {
-                WorldMatrix.SetValueRef(ref Matrix);
+                WorldMatrix.SetValue(Matrix);
 
                 _viewPort.X = GraphicsDevice.Viewport.Width;
                 _viewPort.Y = GraphicsDevice.Viewport.Height;
