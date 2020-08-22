@@ -62,6 +62,7 @@ namespace ClassicUO.Game.Managers
             Constants.SPELLBOOK_7_SPELLS_COUNT
         };
         private Macro _firstNode;
+        private MacroObject _firstMacro;
         private MacroObject _lastMacro;
         private long _nextTimer;
 
@@ -300,7 +301,7 @@ namespace ClassicUO.Game.Managers
 
         public void SetMacroToExecute(MacroObject macro)
         {
-            _lastMacro = macro;
+            _firstMacro = _lastMacro = macro;
         }
 
         public void Update()
@@ -309,6 +310,12 @@ namespace ClassicUO.Game.Managers
             {
                 switch (Process())
                 {
+                    case 3:
+                        /* Repeat from beginning */
+                        _lastMacro = _firstMacro;
+
+                        break;
+
                     case 2:
                         _lastMacro = null;
 
@@ -1403,6 +1410,16 @@ namespace ClassicUO.Game.Managers
                     ProfileManager.Current.EnableCaveBorder = !ProfileManager.Current.EnableCaveBorder;
 
                     break;
+
+                case MacroType.RepeatFromBeginning:
+                    result = 3;
+
+                    break;
+
+                case MacroType.StopMacro:
+                    result = 2;
+
+                    break;
             }
 
 
@@ -1845,6 +1862,8 @@ namespace ClassicUO.Game.Managers
         ToggleTreeStumps,
         ToggleVegetation,
         ToggleCaveTiles,
+        RepeatFromBeginning,
+        StopMacro,
     }
 
     internal enum MacroSubType
