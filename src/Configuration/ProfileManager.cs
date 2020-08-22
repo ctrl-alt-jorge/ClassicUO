@@ -37,9 +37,9 @@ namespace ClassicUO.Configuration
         {
             string rootpath;
             if (string.IsNullOrWhiteSpace(Settings.GlobalSettings.CustomProfilesDirectory))
-                rootpath = FileSystemHelper.CreateFolderIfNotExists(CUOEnviroment.ExecutablePath, "Data", "Profiles");
+                rootpath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Profiles");
             else
-                rootpath = FileSystemHelper.CreateFolderIfNotExists(Settings.GlobalSettings.CustomProfilesDirectory);
+                rootpath = Settings.GlobalSettings.CustomProfilesDirectory;
 
             string path = FileSystemHelper.CreateFolderIfNotExists(rootpath, username, servername, charactername);
             string fileToLoad = Path.Combine(path, "profile.json");
