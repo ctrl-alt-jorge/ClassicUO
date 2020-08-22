@@ -105,6 +105,9 @@ namespace ClassicUO.Configuration
         [JsonProperty("encryption")]
         public byte Encryption { get; set; }
 
+        [JsonProperty("customprofilesdirectory")]
+        public string CustomProfilesDirectory { get; set; } = "";
+
         [JsonProperty("plugins")]
         public string[] Plugins { get; set; } = { @"./Assistant/Razor.dll" };
 
