@@ -327,6 +327,11 @@ namespace ClassicUO
 
                         break;
 
+                    case "profilesdirectory":
+                        Settings.GlobalSettings.ProfilesDirectory = value;
+
+                        break;
+
                     case "clientversion":
                         Settings.GlobalSettings.ClientVersion = value;
 
